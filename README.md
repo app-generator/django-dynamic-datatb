@@ -6,13 +6,13 @@
 
 > Features
 
-- ✅ Modern Stack: `Django` & `VanillaJS`
-- ✅ `DT` layer provided by [Simple-DataTables](https://github.com/fiduswriter/Simple-DataTables)
-- ✅ `Server-side` pagination
-- ✅ Search, Filters
-- ✅ Exports in PDF, CSV formats
-- ✅ `MIT License` (commercial use allowed)
-- ✅ Active versioning & Free [support](https://appseed.us/support/)  
+- Modern Stack: `Django` & `VanillaJS`
+- `DT` layer provided by [Simple-DataTables](https://github.com/fiduswriter/Simple-DataTables)
+- `Server-side` pagination
+- Search, Filters
+- Exports in PDF, CSV formats
+- `MIT License` (commercial use allowed)
+- Active versioning & Free [support](https://appseed.us/support/)  
 
 <br />
 

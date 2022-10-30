@@ -8,11 +8,11 @@ os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
 setup(
 name='django-dynamic-datatb',
-version='0.0.2',
+version='0.0.3',
 zip_safe=False,
 packages=find_packages(),
 include_package_data=True,
-description='Django Dynamic API over DRF',
+description='Django Dynamic Datatables',
 long_description=README,
 long_description_content_type="text/markdown",
 url='https://github.com/app-generator/django-dynamic-datatb',

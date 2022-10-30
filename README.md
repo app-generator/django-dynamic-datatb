@@ -30,17 +30,57 @@ $ pip install git+https://github.com/app-generator/django-dynamic-datatb.git
 
 <br />
 
-> **Step #2** - `Update Configuration`, include the new APPs
+> **Step #2** - Update Configuration, `add new imports`
+
+```python
+import os, inspect
+import django_dyn_dt
+```
+
+<br />
+
+> **Step #3** - Update Configuration, `include the new APPs`
 
 ```python
 INSTALLED_APPS = [
-    'django_dyn_dt',    # Django Dynamic Data tables  # <-- NEW
+    'django_dyn_dt',  # <-- NEW App
 ]
 ```
 
 <br />
 
-> **Step #3** - `Register the model` in `core/settings.py` (DYNAMIC_API section)
+> **Step #4** - Update Configuration, include the new `TEMPLATES` DIR
+
+```python
+
+TEMPLATE_DIR_DATATB = os.path.join(BASE_DIR, "django_dyn_dt/templates") # <-- NEW App
+
+TEMPLATES = [
+    {
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": [TEMPLATE_DIR_DATATB],                                  # <-- NEW Include
+        "APP_DIRS": True,
+        "OPTIONS": {
+        },
+    },
+]
+```
+
+<br />
+
+> **Step #5** - Update Configuration, update `STATICFILES_DIRS` DIR
+
+```python 
+DYN_DB_PKG_ROOT = os.path.dirname( inspect.getfile( django_dyn_dt ) ) # <-- NEW App
+
+STATICFILES_DIRS = (
+    os.path.join(DYN_DB_PKG_ROOT, "templates/static"),
+)
+```
+
+<br />
+
+> **Step #6** - `Register the model` in `core/settings.py` (DYNAMIC_DATATB section)
 
 This sample code assumes that `app1` exists and model `Book` is defined and migrated.
 
@@ -55,16 +95,8 @@ DYNAMIC_DATATB = {
 
 <br />
 
-> **Step #4** - `Migrate DB`
 
-```bash
-$ python manage.py makemigrations
-$ python manage.py migrate
-```
-
-<br />
-
-> **Step #5** - `Update routing`, include APIs 
+> **Step #7** - `Update routing`, include APIs 
 
 ```python
 from django.contrib import admin
@@ -78,7 +110,7 @@ urlpatterns = [
 
 <br />
 
-> **Step #7** - Use the Dynamic Datatable module 
+> **Step #8** - Use the Dynamic Datatable module 
 
 If the managed model is `Books`, the dynamic interface is `/datatb/books/` and all features available. 
 

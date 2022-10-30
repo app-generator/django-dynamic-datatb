@@ -1,5 +1,11 @@
 # Change Log
 
+## [1.0.0] 2022-10-30
+### STABLE_VERSION
+
+- Docs Update
+- Package is now complete
+
 ## [0.0.3] 2022-10-30
 ### Fixes
 

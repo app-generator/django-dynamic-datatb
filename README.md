@@ -1,18 +1,22 @@
 # [Django Dynamic DataTables](https://github.com/app-generator/django-dynamic-datatb)
 
-Simple tool that **Generates Secure APIs** on top of `DRF` with minimum effort - actively supported by [AppSeed](https://appseed.us/).
+Simple tool that provides a powerful data table interface (paginated information) with minimum effort - actively supported by [AppSeed](https://appseed.us/).
 
 <br />
 
 > Features
 
-- `DataTables` provided by `Simple DataTables`
-- `Minimal Configuration` (single line in config for each model)
-- `Handles any model` defined across the project
+- ✅ Modern Stack: `Django` & `VanillaJS`
+- ✅ `DT` layer provided by [Simple-DataTables](https://github.com/fiduswriter/Simple-DataTables)
+- ✅ `Server-side` pagination
+- ✅ Search, Filters
+- ✅ Exports in PDF, CSV formats
+- ✅ `MIT License` (commercial use allowed)
+- ✅ Active versioning & Free [support](https://appseed.us/support/)  
 
 <br />
 
-![Django Dynamic API - DRF Interface (open-source tool).](https://user-images.githubusercontent.com/51070104/197181145-f7458df7-23c3-4c14-bcb1-8e168882a104.jpg)
+![Django Dynamic DataTables - Open-Source tool provided by AppSeed.](https://user-images.githubusercontent.com/51070104/194712823-b8bf1a9e-f5d8-47b3-b7e6-a46a29f3acbe.gif)
 
 <br />
 
@@ -116,7 +120,7 @@ If the managed model is `Books`, the dynamic interface is `/datatb/books/` and a
 
 <br />
 
-![Django API Generator - POSTMAN Interface (open-source tool).](https://user-images.githubusercontent.com/51070104/197181265-eb648e27-e5cf-4f3c-b330-d000aba53c6a.jpg)
+![Django Dynamic DataTables - Open-Source Tool for Developers.](https://user-images.githubusercontent.com/51070104/194706034-b691226d-f9fa-4c05-a828-fc947670c573.jpg)
 
 <br />
 

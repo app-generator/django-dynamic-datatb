@@ -84,7 +84,7 @@ STATICFILES_DIRS = (
 
 <br />
 
-> **Step #6** - `Register the model` in `core/settings.py` (DYNAMIC_DATATB section)
+> **Step #6** - `Register the model` in `settings.py` (DYNAMIC_DATATB section)
 
 This sample code assumes that `app1` exists and model `Book` is defined and migrated.
 

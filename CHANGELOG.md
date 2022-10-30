@@ -1,5 +1,10 @@
 # Change Log
 
+## [1.0.2] 2022-10-30
+### Improvements
+
+- Better DOCS 
+
 ## [1.0.1] 2022-10-30
 ### Improvements
 

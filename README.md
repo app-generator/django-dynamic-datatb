@@ -1,6 +1,6 @@
 # [Django Dynamic DataTables](https://github.com/app-generator/django-dynamic-datatb)
 
-Simple tool that provides a powerful data table interface (paginated information) with minimum effort - actively supported by [AppSeed](https://appseed.us/).
+`Open-source` library for **Django** that provides a `powerful data table interface` (paginated information) with minimum effort - actively supported by [AppSeed](https://appseed.us/).
 
 <br />
 

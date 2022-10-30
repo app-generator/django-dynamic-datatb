@@ -1,4 +1,6 @@
 include LICENSE.md
 include README.md
 recursive-include django_dyn_tb *
+recursive-include django_dyn_tb/templates *
+recursive-include django_dyn_tb/templates/static *
 recursive-include docs *

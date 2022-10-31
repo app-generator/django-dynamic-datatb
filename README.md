@@ -2,6 +2,9 @@
 
 `Open-source` library for **Django** that provides a `powerful data table interface` (paginated information) with minimum effort - actively supported by [AppSeed](https://appseed.us/).
 
+- [Video presentation](https://www.youtube.com/watch?v=LlcpVfvIbMU) - explains `step-by-step` how to use it
+- [Sample project](https://github.com/app-generator/django-dynamic-datatb-sample) - that implements the library
+
 <br />
 
 > Features

@@ -1,4 +1,4 @@
-# [Django Dynamic DataTables](https://github.com/app-generator/django-dynamic-datatb)
+# [Django Dynamic DataTables](https://appseed.us/developer-tools/django-dynamic-datatables/)
 
 `Open-source` library for **Django** that provides a `powerful data table interface` (paginated information) with minimum effort - actively supported by [AppSeed](https://appseed.us/).
 
@@ -136,4 +136,4 @@ If the managed model is `Books`, the dynamic interface is `/datatb/books/` and a
 <br />
 
 ---
-[Django Dynamic DataTables](https://github.com/app-generator/django-dynamic-datatb) - Open-source library provided by **[AppSeed](https://appseed.us/)**
+[Django Dynamic DataTables](https://appseed.us/developer-tools/django-dynamic-datatables/) - Open-source library provided by **[AppSeed](https://appseed.us/)**

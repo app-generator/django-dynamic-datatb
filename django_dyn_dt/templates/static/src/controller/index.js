@@ -155,11 +155,11 @@ export const columnsManage = (dataTable) => {
 
             const id = myData.headings.indexOf(e.target.closest('input').id)
             if (e.target.closest('input').checked) {
-                dataTable.columns().hide([parseInt(id)])
+                dataTable.columns.hide([parseInt(id)])
                 const hideColumns = JSON.parse(localStorage.getItem('hideColumns')) || []
                 localStorage.setItem('hideColumns' , JSON.stringify([...hideColumns , e.target.closest('input').id]))
             } else {
-                dataTable.columns().show([parseInt(id)])
+                dataTable.columns.show([parseInt(id)])
                 const hideColumns = JSON.parse(localStorage.getItem('hideColumns')) || []
                 localStorage.setItem('hideColumns' , JSON.stringify(hideColumns.filter(d => d !== e.target.closest('input').id)))
             }
@@ -212,7 +212,7 @@ export const exportData = (dataTable, type) => {
 
     const searchParam = new URLSearchParams(window.location.search).get('search') || ''
 
-    const hiddenColumns = myData.headings.filter((d,i) => !dataTable.columns().visible(i))
+    const hiddenColumns = myData.headings.filter((d,i) => !dataTable.columns.visible(i))
 
     fetch (`/datatb/${modelName}/export/`,
         {method: 'POST',body: JSON.stringify({

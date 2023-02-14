@@ -39,7 +39,7 @@ myData.data.forEach((d,i) => {
     newColumn.push(editBtn + " &nbsp; " + removeBtn)
 })
         // add buttons
-dataTable.columns().add({
+dataTable.columns.add({
     heading: '',
     data: newColumn
 })
@@ -66,7 +66,7 @@ window.onload = () => {
 
     const hideColumns = JSON.parse(localStorage.getItem('hideColumns'))
     hideColumns.forEach(d => {
-        dataTable.columns().hide([myData.headings.indexOf(d)])
+        dataTable.columns.hide([myData.headings.indexOf(d)])
     })
 
     const els = document.getElementsByClassName('form-check-input')

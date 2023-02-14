@@ -234,10 +234,11 @@ def get_random_string(length):
 def _get_headings(model_class, filter_relations=True):
     headings = []
     for field in model_class._meta.get_fields():
-        is_many_to_many_field = field.__dict__.get('many_to_many', False)
-        is_many_to_one_field = field.__dict__.get('many_to_one', False)
-        is_one_to_many_field = field.__dict__.get('one_to_many', False)
-        is_one_to_one_field = field.__dict__.get('one_to_one', False)
+        field_dict = field.__dict__
+        is_many_to_many_field = field_dict.get('many_to_many', False)
+        is_many_to_one_field = field_dict.get('many_to_one', False)
+        is_one_to_many_field = field_dict.get('one_to_many', False)
+        is_one_to_one_field = field_dict.get('one_to_one', False)
         if filter_relations and (
                 is_many_to_many_field or is_many_to_one_field or is_one_to_many_field or is_one_to_one_field):
             continue

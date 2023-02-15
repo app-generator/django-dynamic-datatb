@@ -1,12 +1,18 @@
 # Change Log
 
+## [1.0.7] 2023-02-15
+### Changes
+
+- Fixes & Stability
+- Minor Code refactoring
+
 ## [1.0.6] 2022-11-01
-### Improvements
+### Changes
 
 - Update DOCS
 
 ## [1.0.5] 2022-10-31
-### Improvements
+### Changes
 
 - Update DOCS
 

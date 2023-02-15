@@ -1,21 +1,21 @@
 # [Django Dynamic DataTables](https://appseed.us/developer-tools/django-dynamic-datatables/)
 
-`Open-source` library for **Django** that provides a `powerful data table interface` (paginated information) with minimum effort - actively supported by [AppSeed](https://appseed.us/).
+`Open-Source` library for **Django** that provides a `powerful data table interface` (paginated information) with minimum effort - actively supported by [AppSeed](https://appseed.us/).
 
-- [Video presentation](https://www.youtube.com/watch?v=LlcpVfvIbMU) - explains `step-by-step` how to use it
-- [Sample project](https://github.com/app-generator/django-dynamic-datatb-sample) - that implements the library
+- [Django Dynamic Services](https://github.com/app-generator/django-dynamic-services) - `sample project that uses the library`
+- Free [support](https://appseed.us/support/) via Email and Discord
 
 <br /> 
 
 > Features
 
-- ✅ Modern Stack: `Django` & `VanillaJS`
-- ✅ `DT` layer provided by [Simple-DataTables](https://github.com/fiduswriter/Simple-DataTables)
-- ✅ `Server-side` pagination
-- ✅ Search, Filters
-- ✅ Exports in PDF, CSV formats
-- ✅ `MIT License` (commercial use allowed)
-- ✅ Active versioning & Free [support](https://appseed.us/support/)  
+- Modern Stack: `Django` & `VanillaJS`
+- `DT` layer provided by [Simple-DataTables](https://github.com/fiduswriter/Simple-DataTables)
+- `Server-side` pagination
+- Search, Filters
+- Exports in PDF, CSV formats
+- `MIT License` (commercial use allowed)
+- Active versioning & Free [support](https://appseed.us/support/)  
 
 <br />
 

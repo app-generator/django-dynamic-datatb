@@ -8,7 +8,7 @@ os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
 setup(
 name='django-dynamic-datatb',
-version='1.0.8',
+version='1.0.9',
 zip_safe=False,
 packages=find_packages(),
 include_package_data=True,

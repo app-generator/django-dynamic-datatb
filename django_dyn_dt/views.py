@@ -3,6 +3,7 @@ import os, json, math, random, string, base64
 
 from django.core.exceptions import ValidationError
 from django.db.models import Q
+from django.db.models.fields.related import RelatedField
 from django.http import HttpResponse
 from django.shortcuts import render
 
@@ -22,9 +23,9 @@ from django.conf import settings
 DYNAMIC_DATATB = {}
 
 try:
-    DYNAMIC_DATATB = getattr(settings, 'DYNAMIC_DATATB') 
-except:     
-    pass 
+    DYNAMIC_DATATB = getattr(settings, 'DYNAMIC_DATATB')
+except:
+    pass
 
 # TODO: 404 for wrong page number
 def data_table_view(request, **kwargs):
@@ -32,8 +33,7 @@ def data_table_view(request, **kwargs):
         model_class = Utils.get_class(DYNAMIC_DATATB, kwargs.get('model_name'))
     except KeyError:
         return render(request, '404.html', status=404)
-    headings = [field.name for field in model_class._meta.get_fields()]
-
+    headings = _get_headings(model_class)
     page_number = int(request.GET.get('page', 1))
     search_key = request.GET.get('search', '')
     entries = int(request.GET.get('entries', 10))
@@ -149,8 +149,7 @@ def export(request, **kwargs):
     export_type = request_body.get('type', 'csv')
     filter_options = Q()
 
-    headings = filter(lambda field: field.name not in hidden,
-                      [field for field in model_class._meta.get_fields()])
+    headings = filter(lambda field: field.name not in hidden, _get_headings(model_class))
     headings = list(headings)
     for field in headings:
         field_name = field.name
@@ -230,3 +229,19 @@ def get_random_string(length):
     # choose from all lowercase letter
     letters = string.ascii_lowercase
     return ''.join(random.choice(letters) for i in range(length))
+
+
+def _get_headings(model_class, filter_relations=True):
+    headings = []
+    for field in model_class._meta.get_fields():
+        if filter_relations and _is_relation_field(field):
+            continue
+        headings.append(field.name)
+    return headings
+
+def _is_relation_field(field):
+    is_many_to_many_field = field.many_to_many is not None
+    is_many_to_one_field = field.many_to_one is not None
+    is_one_to_many_field = field.one_to_many is not None
+    is_one_to_one_field = field.one_to_one is not None
+    return is_many_to_many_field or is_many_to_one_field or is_one_to_many_field or is_one_to_one_field

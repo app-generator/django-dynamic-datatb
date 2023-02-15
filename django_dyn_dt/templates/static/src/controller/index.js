@@ -212,7 +212,7 @@ export const exportData = (dataTable, type) => {
 
     const searchParam = new URLSearchParams(window.location.search).get('search') || ''
 
-    const hiddenColumns = myData.headings.filter((d,i) => !dataTable.columns().visible(i))
+    const hiddenColumns = myData.headings.filter((d,i) => !dataTable.columns.visible(i))
 
     fetch (`/datatb/${modelName}/export/`,
         {method: 'POST',body: JSON.stringify({

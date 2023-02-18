@@ -47,8 +47,10 @@ dataTable.columns().add({
 dataTable.table.addEventListener('click', (e) => {
     if (e.target.nodeName === 'I' ) {
         const row = e.target.closest('tr');
+        const currentDatatb = e.target.closest('table')
+        const currentModelName = currentDatatb.id.replace('table_', '')
         if (e.target.className.includes('remove')) {
-            removeRow(dataTable,row.dataIndex)
+            removeRow(dataTable,row.dataIndex,currentModelName)
         }
         else if (e.target.className.includes('edit')) {
             const rowContent = [].slice.call(dataTable.data[row.dataIndex].cells).map((cell) => { return cell.textContent; });

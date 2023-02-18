@@ -1,5 +1,4 @@
-
-import {myData} from '../../data/index.js'
+import {myData} from '../../data/index.js';
 
 export const formTypes = {
     ADD: 'add',

@@ -32,9 +32,9 @@ export const addController = (formType) => {
     addBtn.id = 'add'
 
     addContainer.appendChild(addBtn)
-
-    document.querySelector('.dropdown').insertBefore(addContainer ,
-        document.querySelector('#dropdownMenuButton1')
+    let datatb = getCurrentDataTable()
+    datatb.querySelector('.dropdown').insertBefore(addContainer ,
+        datatb.querySelector('#dropdownMenuButton1')
     )
 
     addBtn.addEventListener('click' , (e) => {
@@ -45,8 +45,8 @@ export const addController = (formType) => {
 }
 
 function search_action() {
-
-    const searchValue = document.querySelector('#search').value
+    let datatb = getCurrentDataTable()
+    const searchValue = datatb.querySelector('#search').value
 
     const searchParams = new URLSearchParams(window.location.search)
     searchParams.set("search", searchValue);
@@ -62,7 +62,6 @@ export const search = () => {
     const searchContainer     = document.createElement('div')
     searchContainer.className = 'd-flex'
     searchContainer.id        = 'search-container'
-    
     const searchInput         = document.createElement('input')
     searchInput.className     = 'form-control mx-1'
     searchInput.setAttribute('placeholder', 'search...')
@@ -77,17 +76,18 @@ export const search = () => {
     searchContainer.appendChild(searchInput)
     searchContainer.appendChild(searchBtn)
 
-    document.querySelector('.dataTable-top').appendChild(searchContainer)
+    let datatb = getCurrentDataTable()
+    datatb.querySelector('.dataTable-top').appendChild(searchContainer)
 
     // Trigger Search on ENTER
-    document.querySelector('#search').addEventListener("keypress", function(event) {
+    datatb.querySelector('#search').addEventListener("keypress", function(event) {
         if (event.key === "Enter") {
             search_action();
         }    
     })
 
     // Trigger Search on Button Click
-    document.querySelector('#search-btn').addEventListener('click',() => {
+    datatb.querySelector('#search-btn').addEventListener('click',() => {
         search_action();
     })
 }
@@ -106,7 +106,8 @@ export const middleContainer = (dataTable) => {
 
     middleContainer.appendChild(span)
 
-    document.querySelector('.dataTable-top').insertBefore(middleContainer, document.querySelector('#search-container'));
+    let datatb = getCurrentDataTable()
+    datatb.querySelector('.dataTable-top').insertBefore(middleContainer, datatb.querySelector('#search-container'));
 }
 
 // Filter Combo (layout + Events)
@@ -118,7 +119,7 @@ export const columnsManage = (dataTable) => {
 
     const button       = document.createElement('button')
     button.className   = 'btn dropdown-toggle'
-    button.id          = 'dropdownMenuButton1'
+    button.id          = 'dropdownMenuButton1' + '_' + modelName
     button.setAttribute( 'data-bs-toggle' , 'dropdown')
     button.textContent = 'Filter'
 
@@ -148,7 +149,8 @@ export const columnsManage = (dataTable) => {
     })
 
     dropDown.appendChild(ul)
-    document.querySelector('.dataTable-top').insertBefore(dropDown, document.querySelector('#search-container'));
+    let datatb = getCurrentDataTable()
+    datatb.querySelector('.dataTable-top').insertBefore(dropDown, datatb.querySelector('#search-container'));
 
     dropDown.addEventListener('change' , (e) => {
         if (e.target.nodeName === 'INPUT') {
@@ -199,22 +201,22 @@ export const exportController = (dataTable) => {
     exportContainer.appendChild(csvImg)
 
     //exportContainer.appendChild(excelImg)
-
-    document.querySelector('.dropdown').insertBefore(exportContainer ,
-        document.querySelector('#dropdownMenuButton1')
+    let datatb = getCurrentDataTable()
+    datatb.querySelector('.dropdown').insertBefore(exportContainer ,
+        datatb.querySelector('#dropdownMenuButton1')
     )
 
     //document.querySelector('.dropdown').appendChild(exportContainer);
 }
 
 // Action: Export
-export const exportData = (dataTable, type) => {
+export const exportData = (dataTable, type, toRequestModelName) => {
 
     const searchParam = new URLSearchParams(window.location.search).get('search') || ''
 
     const hiddenColumns = myData.headings.filter((d,i) => !dataTable.columns.visible(i))
 
-    fetch (`/datatb/${modelName}/export/`,
+    fetch (`/datatb/${toRequestModelName}/export/`,
         {method: 'POST',body: JSON.stringify({
                 search: searchParam,
                 hidden_cols: hiddenColumns,
@@ -238,15 +240,14 @@ export const exportData = (dataTable, type) => {
         })
 }
 
-export const addRow = async (dataTable, item) => {
+export const addRow = async (dataTable, item, toRequestModelName) => {
 
     const myModalEl = document.getElementById('exampleModal');
     const modal = bootstrap.Modal.getInstance(myModalEl)
-
     delete item.id
 
     // server
-    fetch (`/datatb/${modelName}/add/`, {
+    fetch (`/datatb/${toRequestModelName}/`, {
         method: "POST",
         body: JSON.stringify(item),
     })
@@ -275,14 +276,14 @@ export const addRow = async (dataTable, item) => {
         })
 }
 
-export const editRow = (dataTable , item) => {
+export const editRow = (dataTable , item, toRequestModelName) => {
 
     const id = item.id
     delete item.id
 
     // server
-    fetch (`/datatb/${modelName}/edit/${id}/`, {
-        method: "POST",
+    fetch (`/datatb/${toRequestModelName}/${id}/`, {
+        method: "PUT",
         body: JSON.stringify(item),
     })
         .then((response) => {
@@ -314,13 +315,13 @@ export const editRow = (dataTable , item) => {
         })
 }
 
-export const removeRow = (dataTable , item) => {
+export const removeRow = (dataTable , item, toRequestModelName) => {
 
     const id = dataTable.data[item].cells[0].data
 
     // server
-    fetch (`/datatb/${modelName}/delete/${id}/`, {
-        method: "POST",
+    fetch (`/datatb/${toRequestModelName}/${id}/`, {
+        method: "DELETE",
     })
         .then((response) => {
             if(!response.ok) {
@@ -341,4 +342,8 @@ export const removeRow = (dataTable , item) => {
             toast.show()
         })
 
+}
+
+export const getCurrentDataTable = () => {
+    return document.querySelector('#div_datatb_'+modelName)
 }

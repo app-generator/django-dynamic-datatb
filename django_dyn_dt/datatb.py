@@ -1,6 +1,5 @@
 import json
 import math
-import uuid
 from typing import List
 
 import django.db.models

@@ -1,20 +1,20 @@
-import {modelName, myData} from "../../data/index.js";
-import {formConstructor, formTypes} from "../form/index.js";
+import { modelName, myData } from "../../data/index.js";
+import { formConstructor, formTypes } from "../form/index.js";
 
-const editBtn   = `<i class="btn-outline-primary edit bi bi-pencil-square" data-bs-toggle="modal" data-bs-target="#exampleModal"></i>`
+const editBtn = `<i class="btn-outline-primary edit bi bi-pencil-square" data-bs-toggle="modal" data-bs-target="#exampleModal"></i>`
 const removeBtn = `<i class="btn-outline-danger remove bi bi-eraser"></i>`
 
 const toastLive = document.getElementById('liveToast')
-const toast     = new bootstrap.Toast(toastLive)
+const toast = new bootstrap.Toast(toastLive)
 
-const setToastBody = (text,type) => {
+const setToastBody = (text, type) => {
     document.querySelector('.toast-body').innerHTML = text
 
-    toastLive.className =  type === 'success'
+    toastLive.className = type === 'success'
         ?
-    toastLive.className.replace(/bg-.+/,'bg-success')
+        toastLive.className.replace(/bg-.+/, 'bg-success')
         :
-    toastLive.className.replace(/bg-.+/,'bg-danger')
+        toastLive.className.replace(/bg-.+/, 'bg-danger')
 
 }
 
@@ -22,7 +22,7 @@ const setToastBody = (text,type) => {
 export const addController = (formType) => {
 
     const myModalEl = document.getElementById('exampleModal');
-    const modal = new bootstrap.Modal(myModalEl , {})
+    const modal = new bootstrap.Modal(myModalEl, {})
 
     const addContainer = document.createElement('div')
 
@@ -33,11 +33,11 @@ export const addController = (formType) => {
 
     addContainer.appendChild(addBtn)
     let datatb = getCurrentDataTable()
-    datatb.querySelector('.dropdown').insertBefore(addContainer ,
+    datatb.querySelector('.dropdown').insertBefore(addContainer,
         datatb.querySelector('#dropdownMenuButton1')
     )
 
-    addBtn.addEventListener('click' , (e) => {
+    addBtn.addEventListener('click', (e) => {
         formType = formTypes.ADD
         formConstructor(formTypes.ADD)
         modal.show()
@@ -52,26 +52,27 @@ function search_action() {
     searchParams.set("search", searchValue);
     searchParams.set("page", '1');
     const newRelativePathQuery = window.location.pathname + '?' + searchParams.toString();
-    window.history.pushState({},'',newRelativePathQuery)
+    window.history.pushState({}, '', newRelativePathQuery)
     location.reload()
 }
 
 // Search Box + Events
 export const search = () => {
 
-    const searchContainer     = document.createElement('div')
+    const searchContainer = document.createElement('div')
     searchContainer.className = 'd-flex'
-    searchContainer.id        = 'search-container'
-    const searchInput         = document.createElement('input')
-    searchInput.className     = 'form-control mx-1'
+    searchContainer.id = 'search-container'
+    const searchInput = document.createElement('input')
+    searchInput.className = 'form-control mx-1'
     searchInput.setAttribute('placeholder', 'search...')
-    searchInput.setAttribute('id','search')
-    searchInput.setAttribute('type','text')
+    searchInput.setAttribute('id', 'search')
+    searchInput.setAttribute('type', 'text')
+    searchInput.setAttribute('style', 'width:auto;')
 
-    const searchBtn           = document.createElement('button')
-    searchBtn.className       = 'btn btn-primary'
-    searchBtn.setAttribute('id','search-btn')
-    searchBtn.innerHTML       = '<i class="bi bi-search"></i>'
+    const searchBtn = document.createElement('button')
+    searchBtn.className = 'btn btn-primary'
+    searchBtn.setAttribute('id', 'search-btn')
+    searchBtn.innerHTML = '<i class="bi bi-search"></i>'
 
     searchContainer.appendChild(searchInput)
     searchContainer.appendChild(searchBtn)
@@ -80,14 +81,14 @@ export const search = () => {
     datatb.querySelector('.dataTable-top').appendChild(searchContainer)
 
     // Trigger Search on ENTER
-    datatb.querySelector('#search').addEventListener("keypress", function(event) {
+    datatb.querySelector('#search').addEventListener("keypress", function (event) {
         if (event.key === "Enter") {
             search_action();
-        }    
+        }
     })
 
     // Trigger Search on Button Click
-    datatb.querySelector('#search-btn').addEventListener('click',() => {
+    datatb.querySelector('#search-btn').addEventListener('click', () => {
         search_action();
     })
 }
@@ -95,13 +96,13 @@ export const search = () => {
 // Unused 
 export const middleContainer = (dataTable) => {
 
-    const middleContainer     = document.createElement('div')
+    const middleContainer = document.createElement('div')
     middleContainer.className = 'd-flex'
-    middleContainer.id        = 'middle-container'
+    middleContainer.id = 'middle-container'
 
-    const span       = document.createElement('span')
-    span.className   = 'mx-1'
-    span.id          = 'span1'
+    const span = document.createElement('span')
+    span.className = 'mx-1'
+    span.id = 'span1'
     span.textContent = 'Dummy'
 
     middleContainer.appendChild(span)
@@ -113,33 +114,33 @@ export const middleContainer = (dataTable) => {
 // Filter Combo (layout + Events)
 export const columnsManage = (dataTable) => {
 
-    const dropDown     = document.createElement('div')
+    const dropDown = document.createElement('div')
     dropDown.className = 'dropdown d-flex'
-    dropDown.id        = 'filter-container'
+    dropDown.id = 'filter-container'
 
-    const button       = document.createElement('button')
-    button.className   = 'btn dropdown-toggle'
-    button.id          = 'dropdownMenuButton1' + '_' + modelName
-    button.setAttribute( 'data-bs-toggle' , 'dropdown')
+    const button = document.createElement('button')
+    button.className = 'btn dropdown-toggle'
+    button.id = 'dropdownMenuButton1' + '_' + modelName
+    button.setAttribute('data-bs-toggle', 'dropdown')
     button.textContent = 'Filter'
 
     dropDown.appendChild(button)
 
-    const ul           = document.createElement( 'ul')
-    ul.className       = 'dropdown-menu'
+    const ul = document.createElement('ul')
+    ul.className = 'dropdown-menu'
 
-    myData.headings.forEach((d,i) => {
+    myData.headings.forEach((d, i) => {
 
-        const li          = document.createElement('li')
-        li.className      = 'dropdown-item'
+        const li = document.createElement('li')
+        li.className = 'dropdown-item'
 
-        const check       = document.createElement('input')
-        check.className   = 'form-check-input'
-        check.id          = d
-        check.setAttribute('type','checkbox')
+        const check = document.createElement('input')
+        check.className = 'form-check-input'
+        check.id = d
+        check.setAttribute('type', 'checkbox')
 
-        const label       = document.createElement('label')
-        label.className   = 'form-check-label mx-1'
+        const label = document.createElement('label')
+        label.className = 'form-check-label mx-1'
         label.textContent = d
 
         li.appendChild(check)
@@ -152,18 +153,18 @@ export const columnsManage = (dataTable) => {
     let datatb = getCurrentDataTable()
     datatb.querySelector('.dataTable-top').insertBefore(dropDown, datatb.querySelector('#search-container'));
 
-    dropDown.addEventListener('change' , (e) => {
+    dropDown.addEventListener('change', (e) => {
         if (e.target.nodeName === 'INPUT') {
 
             const id = myData.headings.indexOf(e.target.closest('input').id)
             if (e.target.closest('input').checked) {
                 dataTable.columns().hide([parseInt(id)])
                 const hideColumns = JSON.parse(localStorage.getItem('hideColumns')) || []
-                localStorage.setItem('hideColumns' , JSON.stringify([...hideColumns , e.target.closest('input').id]))
+                localStorage.setItem('hideColumns', JSON.stringify([...hideColumns, e.target.closest('input').id]))
             } else {
                 dataTable.columns().show([parseInt(id)])
                 const hideColumns = JSON.parse(localStorage.getItem('hideColumns')) || []
-                localStorage.setItem('hideColumns' , JSON.stringify(hideColumns.filter(d => d !== e.target.closest('input').id)))
+                localStorage.setItem('hideColumns', JSON.stringify(hideColumns.filter(d => d !== e.target.closest('input').id)))
             }
 
         }
@@ -173,16 +174,16 @@ export const columnsManage = (dataTable) => {
 // Export layout
 export const exportController = (dataTable) => {
 
-    const exportContainer     = document.createElement('div')
-    exportContainer.id        = 'export-container'
+    const exportContainer = document.createElement('div')
+    exportContainer.id = 'export-container'
     exportContainer.className = 'mx-1'
 
     const pdfImg = document.createElement('img')
-    pdfImg.setAttribute('src',"/static/src/images/pdf.svg")
+    pdfImg.setAttribute('src', "/static/src/images/pdf.svg")
     pdfImg.id = 'pdf'
 
     const csvImg = document.createElement('img')
-    csvImg.setAttribute('src',"/static/src/images/csv.svg")
+    csvImg.setAttribute('src', "/static/src/images/csv.svg")
     csvImg.id = 'csv'
 
     /*
@@ -191,9 +192,12 @@ export const exportController = (dataTable) => {
     excelImg.id = 'excel'
     */
 
-    exportContainer.addEventListener('click' , (e) => {
-        if (e.target.nodeName === 'IMG' ) {
-            exportData(dataTable , e.target.id )
+    exportContainer.addEventListener('click', (e) => {
+        console.log(e)
+        if (e.target.nodeName === 'IMG') {
+            const Re = /(.*)_/
+            let ModelName = dataTable.table.id.replace(Re, '');
+            exportData(dataTable, e.target.id, ModelName)
         }
     })
 
@@ -202,7 +206,7 @@ export const exportController = (dataTable) => {
 
     //exportContainer.appendChild(excelImg)
     let datatb = getCurrentDataTable()
-    datatb.querySelector('.dropdown').insertBefore(exportContainer ,
+    datatb.querySelector('.dropdown').insertBefore(exportContainer,
         datatb.querySelector('#dropdownMenuButton1')
     )
 
@@ -213,27 +217,32 @@ export const exportController = (dataTable) => {
 export const exportData = (dataTable, type, toRequestModelName) => {
 
     const searchParam = new URLSearchParams(window.location.search).get('search') || ''
+    console.log(myData.headings)
 
-    const hiddenColumns = myData.headings.filter((d,i) => !dataTable.columns.visible(i))
-
-    fetch (`/datatb/${toRequestModelName}/export/`,
-        {method: 'POST',body: JSON.stringify({
-                search: searchParam,
-                hidden_cols: hiddenColumns,
-                type: type === 'excel' ? 'xlsx' : type
-            })})
+    // const hiddenColumns = myData.headings.filter((d, i) => {
+    //     !dataTable.columns.visible(i)
+    // })
+    const hiddenColumns =[]
+    fetch(`/datatb/${toRequestModelName}/export/`, {
+        method: 'POST', 
+        body: JSON.stringify({
+            search: searchParam,
+            hidden_cols: hiddenColumns,
+            type: type === 'excel' ? 'xlsx' : type
+        })
+    })
         .then((response) => {
-            if(!response.ok) {
+            if (!response.ok) {
                 return response.text().then(text => { throw new Error(text) })
             } else {
                 return response.json()
             }
         })
         .then((result) => {
-             let a      = document.createElement("a");
-             a.href     = `data:application/${result.file_format};base64,${result.content}`
-             a.download = `data-table.${result.file_format === 'excel' ? 'xlsx' : result.file_format}`
-             a.click();
+            let a = document.createElement("a");
+            a.href = `data:application/${result.file_format};base64,${result.content}`
+            a.download = `data-table.${result.file_format === 'excel' ? 'xlsx' : result.file_format}`
+            a.click();
         })
         .catch((err) => {
             console.log(err.toString())
@@ -247,12 +256,12 @@ export const addRow = async (dataTable, item, toRequestModelName) => {
     delete item.id
 
     // server
-    fetch (`/datatb/${toRequestModelName}/`, {
+    fetch(`/datatb/${toRequestModelName}/`, {
         method: "POST",
         body: JSON.stringify(item),
     })
         .then((response) => {
-            if(!response.ok) {
+            if (!response.ok) {
                 return response.text().then(text => { throw new Error(text) })
             } else {
                 return response.json()
@@ -260,34 +269,34 @@ export const addRow = async (dataTable, item, toRequestModelName) => {
         })
         .then((result) => {
             dataTable.rows().add(
-                [...Object.values({id: result.id.toString(),...item}),editBtn + " " + removeBtn]
+                [...Object.values({ id: result.id.toString(), ...item }), editBtn + " " + removeBtn]
             )
 
             const alert = document.querySelector('.alert')
-            alert.className = alert.className.replace('d-block','d-none')
+            alert.className = alert.className.replace('d-block', 'd-none')
             location.reload();
 
             modal.hide();
         })
         .catch((err) => {
             const alert = document.querySelector('.alert')
-            alert.textContent = JSON.parse(err.toString().replace('Error: ','')).detail
-            alert.className = alert.className.replace('d-none','d-block')
+            alert.textContent = JSON.parse(err.toString().replace('Error: ', '')).detail
+            alert.className = alert.className.replace('d-none', 'd-block')
         })
 }
 
-export const editRow = (dataTable , item, toRequestModelName) => {
+export const editRow = (dataTable, item, toRequestModelName) => {
 
     const id = item.id
     delete item.id
 
     // server
-    fetch (`/datatb/${toRequestModelName}/${id}/`, {
+    fetch(`/datatb/${toRequestModelName}/${id}/`, {
         method: "PUT",
         body: JSON.stringify(item),
     })
         .then((response) => {
-            if(!response.ok) {
+            if (!response.ok) {
                 return response.text().then(text => { throw new Error(text) })
             } else {
                 return response.json()
@@ -295,36 +304,36 @@ export const editRow = (dataTable , item, toRequestModelName) => {
         })
         .then((result) => {
 
-            dataTable.data.forEach((d,i) => {
-                if ( dataTable.data[i].cells[0].data === item.id ) {
+            dataTable.data.forEach((d, i) => {
+                if (dataTable.data[i].cells[0].data === item.id) {
                     dataTable.rows().remove(i)
                 }
             })
             dataTable.rows().add(
-                [...Object.values(item),editBtn + " " + removeBtn]
+                [...Object.values(item), editBtn + " " + removeBtn]
             )
 
             const alert = document.querySelector('.alert')
-            alert.className = alert.className.replace('d-block','d-none')
+            alert.className = alert.className.replace('d-block', 'd-none')
             location.reload();
         })
         .catch((err) => {
             const alert = document.querySelector('.alert')
-            alert.textContent = JSON.parse(err.toString().replace('Error: ','')).detail
-            alert.className = alert.className.replace('d-none','d-block')
+            alert.textContent = JSON.parse(err.toString().replace('Error: ', '')).detail
+            alert.className = alert.className.replace('d-none', 'd-block')
         })
 }
 
-export const removeRow = (dataTable , item, toRequestModelName) => {
+export const removeRow = (dataTable, item, toRequestModelName) => {
 
     const id = dataTable.data[item].cells[0].data
 
     // server
-    fetch (`/datatb/${toRequestModelName}/${id}/`, {
+    fetch(`/datatb/${toRequestModelName}/${id}/`, {
         method: "DELETE",
     })
         .then((response) => {
-            if(!response.ok) {
+            if (!response.ok) {
                 return response.text().then(text => { throw new Error(text) })
             } else {
                 return response.json()
@@ -333,17 +342,17 @@ export const removeRow = (dataTable , item, toRequestModelName) => {
         .then((result) => {
             dataTable.rows().remove(item)
 
-            setToastBody(result.message,'success')
+            setToastBody(result.message, 'success')
             toast.show()
             location.reload()
-     })
+        })
         .catch((err) => {
-            setToastBody(JSON.parse(err.toString().replace('Error: ','')).detail,'fail')
+            setToastBody(JSON.parse(err.toString().replace('Error: ', '')).detail, 'fail')
             toast.show()
         })
 
 }
 
 export const getCurrentDataTable = () => {
-    return document.querySelector('#div_datatb_'+modelName)
+    return document.querySelector('#div_datatb_' + modelName)
 }

@@ -11,6 +11,6 @@ export const events = (dataTable) => {
         window.location.search = '?page=1&entries=' + perPage +
         "&search=" + searchQuery ;
 
-        console.log(perPage)
+        // console.log(perPage)
     });
 }

@@ -48,19 +48,37 @@ function search_action(dataTable) {
     let datatb = getCurrentDataTable()
     const searchValue = datatb.querySelector('#search').value
     
-    dataTable.data.forEach((d, i) => {
-        console.log(dataTable.data[i].cells[1].data)
-        if (!dataTable.data[i].cells[1].data.includes(searchValue)) {
-            dataTable.rows().remove(i)
-        }
-    })
-    // const searchParams = new URLSearchParams(window.location.search)
-    // searchParams.set("search", searchValue);
-    // searchParams.set("page", '1');
+    // dataTable.data.forEach((d, i) => {
+    //     if (!dataTable.data[i].cells[1].data.includes(searchValue)) {
+    //         dataTable.rows().remove(i)
+    //     }
+    // })
+    //  const searchParams = new URLSearchParams({
+    //  })
+
     // const newRelativePathQuery = window.location.pathname + '?' + searchParams.toString();
     // window.history.pushState({}, '', newRelativePathQuery)
-    // console.log(window.history)
     // window.location.reload()
+
+    const Re = /(.*)_/
+    let ModelName = dataTable.table.id.replace(Re, '');
+    const urlpath=`/datatb/${ModelName}`
+    const base=window.location.origin
+    // console.log(window.location)
+    const searchParams = new URLSearchParams({
+        search: searchValue 
+    })
+
+    const url = new URL(`${base}${urlpath}?${searchParams}`)
+    console.log(url.href)
+    fetch(url,{
+        method:'GET',
+    }).then(
+        (response)=>response.json()
+    )
+    .then(
+        (result)=>console.log(result)
+    )
 }
 
 // Search Box + Events
@@ -224,7 +242,6 @@ export const exportController = (dataTable) => {
 export const exportData = (dataTable, type, toRequestModelName) => {
 
     const searchParam = new URLSearchParams(window.location.search).get('search') || ''
-    console.log(myData.headings)
 
     // const hiddenColumns = myData.headings.filter((d, i) => {
     //     !dataTable.columns.visible(i)

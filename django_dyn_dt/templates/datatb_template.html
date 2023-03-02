@@ -28,49 +28,49 @@
 
     <!--Pagination-->
     <nav aria-label="Page navigation example">
-        <ul class="pagination justify-content-center">
-        {% if has_prev %}
-            <li class="page-item">
-            <a class="page-link" href="?page={{ current_page|add:"-1" }}&entries={{ entries }}&search={{ search }}"> &laquo; </a>
-          </li>
-        {% else %}
-            <li class="page-item disabled">
-            <a class="page-link" href="#" tabindex="-1" aria-disabled="True"> &laquo; </a>
-          </li>
+      <ul class="pagination justify-content-center">
+      {% if has_prev %}
+          <li class="page-item">
+          <a class="page-link" href="?page={{ current_page|add:"-1" }}&entries={{ entries }}&search={{ search }}"> &laquo; </a>
+        </li>
+      {% else %}
+          <li class="page-item disabled">
+          <a class="page-link" href="#" tabindex="-1" aria-disabled="True"> &laquo; </a>
+        </li>
 
+        {% endif %}
+
+      {% if current_page|add:'-4' > 1 %}
+          <li class="page-item"><a class="page-link" >&hellip;</a></li>
+      {% endif %}
+
+      {% for i in total_pages %}
+          {% if current_page == i %}
+              <li class="page-item active" aria-current="page">
+              <span class="page-link">
+                  {{ i }}
+            </span>
+          </li>
+          {% else  %}
+               <li class="page-item"><a class="page-link" href="?page={{ i }}&entries={{ entries }}&search={{ search }}">{{ i }}</a></li>
           {% endif %}
+      {% endfor %}
 
-        {% if current_page|add:'-4' > 1 %}
-            <li class="page-item"><a class="page-link" >&hellip;</a></li>
-        {% endif %}
+      {% if total_pages|length > current_page|add:'4' %}
+         <li class="page-item"><a class="page-link" >&hellip;</a></li>
+      {% endif %}
 
-        {% for i in total_pages %}
-            {% if current_page == i %}
-                <li class="page-item active" aria-current="page">
-                <span class="page-link">
-                    {{ i }}
-              </span>
-            </li>
-            {% else  %}
-                 <li class="page-item"><a class="page-link" href="?page={{ i }}&entries={{ entries }}&search={{ search }}">{{ i }}</a></li>
-            {% endif %}
-        {% endfor %}
-
-        {% if total_pages|length > current_page|add:'4' %}
-           <li class="page-item"><a class="page-link" >&hellip;</a></li>
-        {% endif %}
-
-        {% if has_next %}
-            <li class="page-item">
-            <a class="page-link" href="?page={{ current_page|add:"1" }}&entries={{ entries }}&search={{ search }}"> &raquo; </a>
-          </li>
-        {% else %}
-            <li class="page-item disabled">
-            <a class="page-link" href="#" tabindex="-1" aria-disabled="True"> &raquo; </a>
-          </li>
-        {% endif %}
-      </ul>
-    </nav>
+      {% if has_next %}
+          <li class="page-item">
+          <a class="page-link" href="?page={{ current_page|add:"1" }}&entries={{ entries }}&search={{ search }}"> &raquo; </a>
+        </li>
+      {% else %}
+          <li class="page-item disabled">
+          <a class="page-link" href="#" tabindex="-1" aria-disabled="True"> &raquo; </a>
+        </li>
+      {% endif %}
+    </ul>
+  </nav>
 
     <!-- Edit/Create Modal -->
     <div class="modal fade"

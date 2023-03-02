@@ -7,10 +7,9 @@ export const events = (dataTable) => {
     if (searchQuery === null)
         searchQuery = ''
 
-    dataTable.on('datatable.perpage', function(perPage) {
-        window.location.search = '?page=1&entries=' + perPage +
-        "&search=" + searchQuery ;
-
-        // console.log(perPage)
-    });
+    // dataTable.on('datatable.perpage', function(perPage) {
+    //     window.location.search = '?page=1&entries=' + perPage +
+    //     "&search=" + searchQuery ;
+    //     // console.log(perPage)
+    // });
 }

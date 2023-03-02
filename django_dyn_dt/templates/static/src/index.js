@@ -98,9 +98,8 @@ exportController(dataTable)
 search()
 
 document.addEventListener('submit', (e) => {
-
-    e.preventDefault();
-
+        // console.log(formType)
+    // e.preventDefault();
     if (formType === formTypes.ADD)
         addRow(dataTable, getFormData())
     else if (formType === formTypes.EDIT)

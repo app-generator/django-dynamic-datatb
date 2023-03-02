@@ -10,19 +10,17 @@ const toast = new bootstrap.Toast(toastLive)
 
 const ClearModals = () => {
 
-    let modaldiv = document.querySelectorAll('.modal.fade')
+    let modaldiv = document.querySelectorAll('.modal.fade.show')
     let backdiv = document.querySelectorAll('.modal-backdrop.fade.show')
-    console.log(backdiv)
     if (backdiv) {
-        // $('#modal .').modal().hide()
-        modaldiv.forEach((eachdiv,i) => {if(i!=0) eachdiv.remove()})
+        modaldiv.forEach((eachdiv,i) => {eachdiv.remove()})
         backdiv.forEach((eachdiv) => { eachdiv.remove()})
     }
 }
 
 const GetNewData = async (urlpath, datatablename) => {
-    // TRY to get the new HTML
-    const newTable = fetch(urlpath, {
+    console.log(urlpath)
+    await fetch(urlpath, {
         method: 'GET'
     }).then(
         (response) => response
@@ -30,7 +28,7 @@ const GetNewData = async (urlpath, datatablename) => {
         (result) => result.text()
     ).then(
         (data) => {
-            $('#data_table').html(data)
+            $(`#div_datatb_${datatablename}`).html(data)
         }
     )
 }
@@ -49,7 +47,7 @@ const setToastBody = (text, type) => {
 
 // Add Button + Events
 export const addController = (formType) => {
-
+    // window.alert('zarp')
     const myModalEl = document.getElementById('exampleModal');
     const modal = new bootstrap.Modal(myModalEl, {})
 
@@ -60,6 +58,9 @@ export const addController = (formType) => {
     addBtn.textContent = '+'
     addBtn.id = 'add'
 
+    addBtn.onclick = null;
+    // $('#add').unbind()
+
     addContainer.appendChild(addBtn)
     let datatb = getCurrentDataTable()
     datatb.querySelector('.dropdown').insertBefore(addContainer,
@@ -67,6 +68,7 @@ export const addController = (formType) => {
     )
 
     addBtn.addEventListener('click', (e) => {
+        e.preventDefault();
         formType = formTypes.ADD
         formConstructor(formTypes.ADD)
         modal.show()
@@ -87,21 +89,25 @@ async function search_action(dataTable) {
 
     const url = new URL(`${base}${urlpath}?${searchParams}`)
     // console.log(url.href)
-    await fetch(url, {
-        method: 'GET',
-    }).then(
-        (response) => response
-    ).then(
-        (result) => {
-            if (result.status == 200) {
-                GetNewData(url, ModelName)
-            }
-            else {
-                console.log(result.text())
-            }
+    const fecthfun = async () => {
+        await fetch(url, {
+            method: 'GET',
+        }).then(
+            (response) => response
+        ).then(
+            (result) => {
+                if (result.status == 200) {
 
-        }
-    )
+                }
+                else {
+                    console.log(result.text())
+                }
+
+            }
+        )
+    }
+    fecthfun()
+    GetNewData(url, ModelName)
 }
 
 // Search Box + Events
@@ -130,6 +136,7 @@ export const search = (dataTable) => {
 
     // Trigger Search on ENTER
     datatb.querySelector('#search').addEventListener("keypress", function (event) {
+        // event.stopPropagation()
         if (event.key === "Enter") {
             search_action(dataTable);
         }
@@ -202,8 +209,8 @@ export const columnsManage = (dataTable) => {
     datatb.querySelector('.dataTable-top').insertBefore(dropDown, datatb.querySelector('#search-container'));
 
     dropDown.addEventListener('change', (e) => {
+        // e.stopPropagation()
         if (e.target.nodeName === 'INPUT') {
-
             const id = myData.headings.indexOf(e.target.closest('input').id)
             if (e.target.closest('input').checked) {
                 dataTable.columns().hide([parseInt(id)])
@@ -242,6 +249,7 @@ export const exportController = (dataTable) => {
 
     exportContainer.addEventListener('click', (e) => {
         // console.log(e)
+        // e.stopPropagation();
         if (e.target.nodeName === 'IMG') {
             const Re = /(.*)_/
             let ModelName = dataTable.table.id.replace(Re, '');
@@ -294,110 +302,100 @@ export const exportData = (dataTable, type, toRequestModelName) => {
         })
 }
 
-export const addRow = async (dataTable, item, toRequestModelName) => {
-    ClearModals()
+
+export const addRow = (dataTable, item, toRequestModelName) => {
+    // document.removeEventListener('submit',docFun)
 
     delete item.id
-    // server
-    await fetch(`/datatb/${toRequestModelName}/`, {
-        method: "POST",
-        body: JSON.stringify(item),
-    })
-        .then((response) => {
-            if (!response.ok) {
-                return response.text().then(text => { throw new Error(text) })
-            } else {
-                return response.json()
-            }
+    const fetchfun = async () => {
+        await fetch(`/datatb/${toRequestModelName}/`, {
+            method: "POST",
+            body: JSON.stringify(item),
         })
-        .then((result) => {
-            if (result.success == true) {
-                // $('#exampleModal').modal('hide')
-                GetNewData(`/datatb/${toRequestModelName}`, toRequestModelName)
-            }
-            else {
-                console.log(result.text())
-            }
-        })
-        .catch((err) => {
-            const alert = document.querySelector('.alert')
-            alert.textContent = JSON.parse(err.toString().replace('Error: ', '')).detail
-            alert.className = alert.className.replace('d-none', 'd-block')
-        })
+            .then((response) => {
+                if (!response.ok) {
+                    return response.text().then(text => { throw new Error(text) })
+                } else {
+                    return response.json()
+                }
+            })
+            .catch((err) => {
+                const alert = document.querySelector('.alert')
+                alert.textContent = JSON.parse(err.toString().replace('Error: ', '')).detail
+                alert.className = alert.className.replace('d-none', 'd-block')
+            })
+    }
+    fetchfun()
+    ClearModals()
+    GetNewData(`/datatb/${toRequestModelName}`, toRequestModelName)
 }
 
 export const editRow = (dataTable, item, toRequestModelName) => {
-    ClearModals()
+    // document.removeEventListener("submit", docFun);
     const id = item.id
-    // delete item.id
 
-    // server
-    fetch(`/datatb/${toRequestModelName}/${id}/`, {
-        method: "PUT",
-        body: JSON.stringify(item),
-    })
-        .then((response) => {
-            if (!response.ok) {
-                return response.text().then(text => { throw new Error(text) })
-            } else {
-
-                return response.json()
-            }
+    const fetchfun = async () => {
+        await fetch(`/datatb/${toRequestModelName}/${id}/`, {
+            method: "PUT",
+            body: JSON.stringify(item),
         })
-        .then((result) => {
-            if (result.success == true) {
+            .then((response) => {
+                if (!response.ok) {
+                    return response.text().then(text => { throw new Error(text) })
+                } else {
+
+                    return response.json()
+                }
+            })
+            // .then(
+            //     (result) => {
+            //         if (result.status == '200') {
+            //         }
+            //     }
+            // )
+
+            .catch((err) => {
                 const alert = document.querySelector('.alert')
-                alert.className = alert.className.replace('d-block', 'd-none')
-                GetNewData(`/datatb/${toRequestModelName}`, toRequestModelName);
-
-            }
-            else {
-                console.log(result.text)
-            }
-
-
-        }).then(
-
-    )
-        .catch((err) => {
-            const alert = document.querySelector('.alert')
-            alert.textContent = JSON.parse(err.toString().replace('Error: ', '')).detail
-            alert.className = alert.className.replace('d-none', 'd-block')
-        })
+                alert.textContent = JSON.parse(err.toString().replace('Error: ', '')).detail
+                alert.className = alert.className.replace('d-none', 'd-block')
+            })
+    }
+    fetchfun()
+    ClearModals()
+    GetNewData(`/datatb/${toRequestModelName}`, toRequestModelName)
 }
 
+
 export const removeRow = (dataTable, item, toRequestModelName) => {
-    ClearModals()
     const id = dataTable.data[item].cells[0].data
-    // console.log(document.getElementById(`div_datatb_${toRequestModelName}`))
-    // server
-    fetch(`/datatb/${toRequestModelName}/${id}/`, {
-        method: "DELETE",
-    })
-        .then((response) => {
+    const fetchfun = async () => {
+        await fetch(`/datatb/${toRequestModelName}/${id}/`, {
+            method: "DELETE",
+        }).then((response) => {
             if (!response.ok) {
                 return response.text().then(text => { throw new Error(text) })
             } else {
                 return response.json()
             }
         })
-        .then((result) => {
+            .then((result) => {
 
-            if (result.success == true) {
-                GetNewData(`/datatb/${toRequestModelName}`, toRequestModelName)
-                setToastBody(result.message, 'success')
+                if (result.success == true) {
+                    setToastBody(result.message, 'success')
+                    toast.show()
+                }
+                else {
+                    console.log(result.text())
+                }
+
+            })
+            .catch((err) => {
+                setToastBody(JSON.parse(err.toString().replace('Error: ', '')).detail, 'fail')
                 toast.show()
-            }
-            else {
-                console.log(result.text())
-            }
-
-        })
-        .catch((err) => {
-            setToastBody(JSON.parse(err.toString().replace('Error: ', '')).detail, 'fail')
-            toast.show()
-        })
-
+            })
+    }
+    fetchfun()
+    GetNewData(`/datatb/${toRequestModelName}`, toRequestModelName)
 }
 
 export const getCurrentDataTable = () => {

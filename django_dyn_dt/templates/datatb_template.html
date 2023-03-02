@@ -72,7 +72,7 @@
       {% endif %}
     </ul>
   </nav>
-
+</div>
     <!-- Edit/Create Modal -->
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog">
@@ -194,12 +194,14 @@ dataTable.columns().add({
 })
         // add funcs
 dataTable.table.addEventListener('click', (e) => {
+  e.preventDefault()
     if (e.target.nodeName === 'I' ) {
         const row = e.target.closest('tr');
         const currentDatatb = e.target.closest('table')
         const currentModelName = currentDatatb.id.replace('table_', '')
         if (e.target.className.includes('remove')) {
             removeRow(dataTable,row.dataIndex,currentModelName)
+            document.removeEventListener('submit',submit)
         }
         else if (e.target.className.includes('edit')) {
             const rowContent = [].slice.call(dataTable.data[row.dataIndex].cells).map((cell) => { return cell.textContent; });
@@ -246,27 +248,29 @@ exportController(dataTable)
 // Search Box
 search(dataTable)
 
-document.addEventListener('submit',(e) => {
-
-    e.preventDefault();
+function submit(e){
+  event.preventDefault()
     const currentForm = e.target.closest('form')
     const currentModelName = currentForm.id.replace('form_id_', '')
-    if (formType === formTypes.ADD)
-    addRow(dataTable, getFormData(), currentModelName)
-    else if (formType === formTypes.EDIT){
-     const item_data=getFormData()    
-      console.log(item_data)  
-      editRow(dataTable,item_data , currentModelName)
-            }
 
-})
+    if (formType === formTypes.ADD){    
+      addRow(dataTable, getFormData(), currentModelName)
+      document.removeEventListener('submit',submit)
+  } 
+    else if (formType === formTypes.EDIT){
+    const item_data=getFormData()    
+    editRow(dataTable,item_data , currentModelName)
+    document.removeEventListener('submit',submit)
+      }}
+
+document.addEventListener('submit',submit)
 
 const getFormData = () => {
     const data = {}
     const myForm = document.querySelector('#form_id_{{ model_name }}')
     
     for (let i of myForm.elements) {
-      // console.log(i)
+
       if (i.type === 'text' || i.type === 'date')
       data[i.placeholder] = i.value;
       // console.log(data)
@@ -282,4 +286,3 @@ currentDataTB.querySelector('.model-name').innerHTML = modelName
 currentDataTB.querySelector('.dataTable-top').className += ' d-flex justify-content-between'
 </script>
 
-</div>

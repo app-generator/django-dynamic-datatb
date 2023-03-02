@@ -11,8 +11,8 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.2/font/bootstrap-icons.css">
 
     <link rel="stylesheet" href="{% static 'src/style/myStyle.css' %}">
-<div style="width: 50%">
-    <div id="div_datatb_{{ model_name }}" class="d-flex flex-column mx-5">
+    <div id="data_table" >
+    <div id="div_datatb_{{ model_name }}" class="d-flex flex-column mx-5" style="width:fit-content">
 
         <!-- page title -->
         <div class="header p-3 pb-0 item d-flex justify-content-between">
@@ -207,7 +207,7 @@ dataTable.table.addEventListener('click', (e) => {
             formConstructor(formTypes.EDIT,rowContent)
         }
     }
-})
+},{once:true})
 
 //window.onload = () => {
 //    if (sessionStorage.getItem('register') == null)

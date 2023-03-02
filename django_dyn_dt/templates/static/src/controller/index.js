@@ -6,13 +6,17 @@ const removeBtn = `<i class="btn-outline-danger remove bi bi-eraser"></i>`
 
 const toastLive = document.getElementById('liveToast')
 const toast = new bootstrap.Toast(toastLive)
-
-const GetNewData = async (urlpath) => {
+// div_datatb_{{ model_name }}
+const GetNewData = async (urlpath, datatablename) => {
     // TRY to get the new HTML
     fetch(urlpath, {
         method: 'GET'
     }).then(
-        (response) => console.log(response)
+        (response) => response
+    ).then(
+        (result) => result.text()
+    ).then(
+        (data) => $(`#data_table`).html(data)
     )
 }
 
@@ -58,29 +62,16 @@ async function search_action(dataTable) {
     let datatb = getCurrentDataTable()
     const searchValue = datatb.querySelector('#search').value
 
-    // dataTable.data.forEach((d, i) => {
-    //     if (!dataTable.data[i].cells[1].data.includes(searchValue)) {
-    //         dataTable.rows().remove(i)
-    //     }
-    // })
-    //  const searchParams = new URLSearchParams({
-    //  })
-
-    // const newRelativePathQuery = window.location.pathname + '?' + searchParams.toString();
-    // window.history.pushState({}, '', newRelativePathQuery)
-    // window.location.reload()
-
     const Re = /(.*)_/
     let ModelName = dataTable.table.id.replace(Re, '');
     const urlpath = `/datatb/${ModelName}`
     const base = window.location.origin
-    // console.log(window.location)
     const searchParams = new URLSearchParams({
         search: searchValue
     })
 
     const url = new URL(`${base}${urlpath}?${searchParams}`)
-    console.log(url.href)
+    // console.log(url.href)
     await fetch(url, {
         method: 'GET',
     }).then(
@@ -88,11 +79,10 @@ async function search_action(dataTable) {
     ).then(
         (result) => {
             if (result.status == 200) {
-                // Get newe HTML file 
-                GetNewData(url)
+                GetNewData(url, ModelName)
             }
             else {
-                console.log(result.text)
+                console.log(result.text())
             }
 
         }
@@ -236,7 +226,7 @@ export const exportController = (dataTable) => {
     */
 
     exportContainer.addEventListener('click', (e) => {
-        console.log(e)
+        // console.log(e)
         if (e.target.nodeName === 'IMG') {
             const Re = /(.*)_/
             let ModelName = dataTable.table.id.replace(Re, '');
@@ -258,9 +248,7 @@ export const exportController = (dataTable) => {
 
 // Action: Export
 export const exportData = (dataTable, type, toRequestModelName) => {
-
     const searchParam = new URLSearchParams(window.location.search).get('search') || ''
-
     // const hiddenColumns = myData.headings.filter((d, i) => {
     //     !dataTable.columns.visible(i)
     // })
@@ -292,13 +280,12 @@ export const exportData = (dataTable, type, toRequestModelName) => {
 }
 
 export const addRow = async (dataTable, item, toRequestModelName) => {
-
     const myModalEl = document.getElementById('exampleModal');
     const modal = bootstrap.Modal.getInstance(myModalEl)
     delete item.id
 
     // server
-    fetch(`/datatb/${toRequestModelName}/`, {
+    await fetch(`/datatb/${toRequestModelName}/`, {
         method: "POST",
         body: JSON.stringify(item),
     })
@@ -310,21 +297,28 @@ export const addRow = async (dataTable, item, toRequestModelName) => {
             }
         })
         .then((result) => {
-            // dataTable.rows().add(
-            //     [...Object.values({ id: result.id.toString(), ...item }), editBtn + " " + removeBtn]
-            // )
+            if (result.success == true) {
+                const alert = document.querySelector('.alert')
+                alert.className = alert.className.replace('d-block', 'd-none')
 
-            const alert = document.querySelector('.alert')
-            alert.className = alert.className.replace('d-block', 'd-none')
-            // location.reload();
+                // let divs = document.querySelectorAll('.modal-backdrop.fade.show')
+                // divs.forEach((div) => div.remove())
 
+                setTimeout(GetNewData(`/datatb/${toRequestModelName}`, toRequestModelName), 2000)
+            }
+            else {
+                console.log(result.text())
+            }
             modal.hide();
-        })
+        }).then(
+    )
         .catch((err) => {
             const alert = document.querySelector('.alert')
             alert.textContent = JSON.parse(err.toString().replace('Error: ', '')).detail
             alert.className = alert.className.replace('d-none', 'd-block')
         })
+
+
 }
 
 export const editRow = (dataTable, item, toRequestModelName) => {
@@ -341,25 +335,33 @@ export const editRow = (dataTable, item, toRequestModelName) => {
             if (!response.ok) {
                 return response.text().then(text => { throw new Error(text) })
             } else {
+                // const myModalEl = document.getElementById('exampleModal');
+                // const modal = new bootstrap.Modal(myModalEl, {})
+                // modal.close()
                 return response.json()
             }
         })
         .then((result) => {
-            dataTable.data.forEach((d, i) => {
-                // console.log(dataTable.data[i].cells[0].data)
-                if (dataTable.data[i].cells[0].data === item.id) {
-                    dataTable.rows().remove(i)
-                }
-            })
-            dataTable.rows().add(
-                [...Object.values(item), editBtn + " " + removeBtn]
-            )
+            if (result.success == true) {
+                const alert = document.querySelector('.alert')
+                alert.className = alert.className.replace('d-block', 'd-none')
 
-            const alert = document.querySelector('.alert')
-            alert.className = alert.className.replace('d-block', 'd-none')
-            // document.querySelector(dataTable.table.id).innerHTML=dataTable.data
+                // let divs = document.querySelectorAll('.modal.fade')
+                // divs.forEach((div) => div.remove())
 
-        })
+                // divs = document.querySelectorAll('.modal-backdrop.fade.show')
+                // divs.forEach((div) => div.remove())
+
+                setTimeout(GetNewData(`/datatb/${toRequestModelName}`, toRequestModelName), 2000)
+            }
+            else {
+                console.log(result.text)
+            }
+
+
+        }).then(
+
+    )
         .catch((err) => {
             const alert = document.querySelector('.alert')
             alert.textContent = JSON.parse(err.toString().replace('Error: ', '')).detail
@@ -370,7 +372,7 @@ export const editRow = (dataTable, item, toRequestModelName) => {
 export const removeRow = (dataTable, item, toRequestModelName) => {
 
     const id = dataTable.data[item].cells[0].data
-    console.log(document.getElementById(`div_datatb_${toRequestModelName}`))
+    // console.log(document.getElementById(`div_datatb_${toRequestModelName}`))
     // server
     fetch(`/datatb/${toRequestModelName}/${id}/`, {
         method: "DELETE",
@@ -383,15 +385,16 @@ export const removeRow = (dataTable, item, toRequestModelName) => {
             }
         })
         .then((result) => {
-            dataTable.rows().remove(item)
 
-            setToastBody(result.message, 'success')
-            toast.show()
-            // console.log(dataTable)
-            // dataTable.table.id
-            // document.querySelector(dataTable.table.id).innerHTML=dataTable.table.id
-            // location.reload()
-            $().load()
+            if (result.success == true) {
+                GetNewData(`/datatb/${toRequestModelName}`, toRequestModelName)
+                setToastBody(result.message, 'success')
+                toast.show()
+            }
+            else {
+                console.log(result.text())
+            }
+
         })
         .catch((err) => {
             setToastBody(JSON.parse(err.toString().replace('Error: ', '')).detail, 'fail')

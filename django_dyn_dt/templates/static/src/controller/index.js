@@ -44,20 +44,27 @@ export const addController = (formType) => {
     })
 }
 
-function search_action() {
+function search_action(dataTable) {
     let datatb = getCurrentDataTable()
     const searchValue = datatb.querySelector('#search').value
-
-    const searchParams = new URLSearchParams(window.location.search)
-    searchParams.set("search", searchValue);
-    searchParams.set("page", '1');
-    const newRelativePathQuery = window.location.pathname + '?' + searchParams.toString();
-    window.history.pushState({}, '', newRelativePathQuery)
-    location.reload()
+    
+    dataTable.data.forEach((d, i) => {
+        console.log(dataTable.data[i].cells[1].data)
+        if (!dataTable.data[i].cells[1].data.includes(searchValue)) {
+            dataTable.rows().remove(i)
+        }
+    })
+    // const searchParams = new URLSearchParams(window.location.search)
+    // searchParams.set("search", searchValue);
+    // searchParams.set("page", '1');
+    // const newRelativePathQuery = window.location.pathname + '?' + searchParams.toString();
+    // window.history.pushState({}, '', newRelativePathQuery)
+    // console.log(window.history)
+    // window.location.reload()
 }
 
 // Search Box + Events
-export const search = () => {
+export const search = (dataTable) => {
 
     const searchContainer = document.createElement('div')
     searchContainer.className = 'd-flex'
@@ -83,13 +90,13 @@ export const search = () => {
     // Trigger Search on ENTER
     datatb.querySelector('#search').addEventListener("keypress", function (event) {
         if (event.key === "Enter") {
-            search_action();
+            search_action(dataTable);
         }
     })
 
     // Trigger Search on Button Click
     datatb.querySelector('#search-btn').addEventListener('click', () => {
-        search_action();
+        search_action(dataTable);
     })
 }
 
@@ -222,9 +229,9 @@ export const exportData = (dataTable, type, toRequestModelName) => {
     // const hiddenColumns = myData.headings.filter((d, i) => {
     //     !dataTable.columns.visible(i)
     // })
-    const hiddenColumns =[]
+    const hiddenColumns = []
     fetch(`/datatb/${toRequestModelName}/export/`, {
-        method: 'POST', 
+        method: 'POST',
         body: JSON.stringify({
             search: searchParam,
             hidden_cols: hiddenColumns,
@@ -274,7 +281,7 @@ export const addRow = async (dataTable, item, toRequestModelName) => {
 
             const alert = document.querySelector('.alert')
             alert.className = alert.className.replace('d-block', 'd-none')
-            location.reload();
+            // location.reload();
 
             modal.hide();
         })
@@ -288,7 +295,7 @@ export const addRow = async (dataTable, item, toRequestModelName) => {
 export const editRow = (dataTable, item, toRequestModelName) => {
 
     const id = item.id
-    delete item.id
+    // delete item.id
 
     // server
     fetch(`/datatb/${toRequestModelName}/${id}/`, {
@@ -303,8 +310,8 @@ export const editRow = (dataTable, item, toRequestModelName) => {
             }
         })
         .then((result) => {
-
             dataTable.data.forEach((d, i) => {
+                // console.log(dataTable.data[i].cells[0].data)
                 if (dataTable.data[i].cells[0].data === item.id) {
                     dataTable.rows().remove(i)
                 }
@@ -315,7 +322,8 @@ export const editRow = (dataTable, item, toRequestModelName) => {
 
             const alert = document.querySelector('.alert')
             alert.className = alert.className.replace('d-block', 'd-none')
-            location.reload();
+            // document.querySelector(dataTable.table.id).innerHTML=dataTable.data
+
         })
         .catch((err) => {
             const alert = document.querySelector('.alert')
@@ -344,7 +352,11 @@ export const removeRow = (dataTable, item, toRequestModelName) => {
 
             setToastBody(result.message, 'success')
             toast.show()
-            location.reload()
+            // console.log(dataTable)
+            // dataTable.table.id
+            // document.querySelector(dataTable.table.id).innerHTML=dataTable.table.id
+            // location.reload()
+            $().load()
         })
         .catch((err) => {
             setToastBody(JSON.parse(err.toString().replace('Error: ', '')).detail, 'fail')

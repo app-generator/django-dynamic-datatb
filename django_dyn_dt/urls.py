@@ -1,4 +1,4 @@
-from django.contrib import admin
+# from django.contrib import admin
 from django.urls import path
 from .views import data_table_view, add_record, delete_record, edit_record, export
 

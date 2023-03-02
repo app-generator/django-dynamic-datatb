@@ -15,6 +15,10 @@ div.datatable-top::after {
     display: none; !important;
 }
 
+#modal-backdrop{
+    opacity: 0;
+}
+
 #search-container {
     width: 10%;
 }

@@ -8,18 +8,26 @@ const toastLive = document.getElementById('liveToast')
 const toast = new bootstrap.Toast(toastLive)
 // div_datatb_{{ model_name }}
 
-const ClearModals = () => {
+export function paginator(e) {
+    const number = e.target.innerHTML
+    const dataTableName=e.target.className.split(' ')[1]
+    document.querySelector('.pagination.justify-content-center').remove()
+    GetNewData(`/datatb/${dataTableName}/?page=${number}`,dataTableName)
+ }
 
+const ClearModals = () => {
     let modaldiv = document.querySelectorAll('.modal.fade.show')
     let backdiv = document.querySelectorAll('.modal-backdrop.fade.show')
+    console.log(backdiv)
     if (backdiv) {
-        modaldiv.forEach((eachdiv,i) => {eachdiv.remove()})
-        backdiv.forEach((eachdiv) => { eachdiv.remove()})
+        backdiv.forEach((eachdiv) => { eachdiv.remove() })
+        modaldiv.forEach((eachdiv, i) => { eachdiv.remove() })
     }
+    console.log(document.querySelectorAll('.modal-backdrop.fade.show'))
 }
 
 const GetNewData = async (urlpath, datatablename) => {
-    console.log(urlpath)
+    ClearModals()
     await fetch(urlpath, {
         method: 'GET'
     }).then(
@@ -326,12 +334,12 @@ export const addRow = (dataTable, item, toRequestModelName) => {
             })
     }
     fetchfun()
-    ClearModals()
+
     GetNewData(`/datatb/${toRequestModelName}`, toRequestModelName)
 }
 
 export const editRow = (dataTable, item, toRequestModelName) => {
-    // document.removeEventListener("submit", docFun);
+
     const id = item.id
 
     const fetchfun = async () => {
@@ -347,13 +355,6 @@ export const editRow = (dataTable, item, toRequestModelName) => {
                     return response.json()
                 }
             })
-            // .then(
-            //     (result) => {
-            //         if (result.status == '200') {
-            //         }
-            //     }
-            // )
-
             .catch((err) => {
                 const alert = document.querySelector('.alert')
                 alert.textContent = JSON.parse(err.toString().replace('Error: ', '')).detail
@@ -361,7 +362,7 @@ export const editRow = (dataTable, item, toRequestModelName) => {
             })
     }
     fetchfun()
-    ClearModals()
+
     GetNewData(`/datatb/${toRequestModelName}`, toRequestModelName)
 }
 

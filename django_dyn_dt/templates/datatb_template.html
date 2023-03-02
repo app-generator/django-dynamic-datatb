@@ -48,12 +48,12 @@
       {% for i in total_pages %}
           {% if current_page == i %}
               <li class="page-item active" aria-current="page">
-              <span class="page-link">
+              <a class="page-link {{model_name}}" >
                   {{ i }}
-            </span>
+              </a>
           </li>
           {% else  %}
-               <li class="page-item"><a class="page-link" href="?page={{ i }}&entries={{ entries }}&search={{ search }}">{{ i }}</a></li>
+               <li class="page-item"><a class="page-link {{model_name}}" id="pagelinker">{{ i }}</a></li>
           {% endif %}
       {% endfor %}
 
@@ -63,11 +63,12 @@
 
       {% if has_next %}
           <li class="page-item">
-          <a class="page-link" href="?page={{ current_page|add:"1" }}&entries={{ entries }}&search={{ search }}"> &raquo; </a>
+          <!-- <a class="page-link" href="?page={{ current_page|add:"1" }}&entries={{ entries }}&search={{ search }}"> &raquo; </a> -->
+          <a class="page-link {{model_name}}" id="pagelinker" > &raquo; </a>
         </li>
       {% else %}
           <li class="page-item disabled">
-          <a class="page-link" href="#" tabindex="-1" aria-disabled="True"> &raquo; </a>
+          <a class="page-link" id="pagelinker" tabindex="-1" aria-disabled="True"> &raquo; </a>
         </li>
       {% endif %}
     </ul>
@@ -149,6 +150,7 @@
 import {modelName, myData} from '{% static 'data/index.js' %}'
 import {events} from '{% static 'src/events/index.js' %}'
 import {
+    paginator,
     removeRow,
     addRow,
     editRow,
@@ -176,6 +178,8 @@ let dataTable = new simpleDatatables.DataTable('#table_{{ model_name }}' , {
     },
     searchable: false,
 })
+document.getElementById('pagelinker').addEventListener('click',paginator)
+
 
 // edit & remove Button
 const newColumn = []
@@ -249,7 +253,7 @@ exportController(dataTable)
 search(dataTable)
 
 function submit(e){
-  event.preventDefault()
+  e.preventDefault()
     const currentForm = e.target.closest('form')
     const currentModelName = currentForm.id.replace('form_id_', '')
 

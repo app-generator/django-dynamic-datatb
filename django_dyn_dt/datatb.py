@@ -109,13 +109,13 @@ class DataTB(views.View):
         if all_data.count() != 0 and not 1 <= page_number <= math.ceil(all_data.count() / entries):
             return shortcuts.render(request, '404.html', status=404)
 
-        return datatb._render(
+        return HttpResponse(content=datatb._render(
             data=data,
             current_page=page_number,
             total_pages=range(1, math.ceil(all_data.count() / entries) + 1),
             entries_per_page=entries,
             search_key=search_key,
-        )
+        ))
 
     def post(self, request, model_name):
         datatb: DataTB = DataTB.find_self(model_name)

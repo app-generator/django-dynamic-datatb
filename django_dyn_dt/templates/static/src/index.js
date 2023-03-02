@@ -32,7 +32,7 @@ const dataTable = new simpleDatatables.DataTable('table', {
 const newColumn = []
 myData.data.forEach((d, i) => {
 
-    const editBtn = `<i class="btn-outline-primary edit bi bi-pencil-square" data-bs-toggle="modal" data-bs-target="#exampleModal"></i>`
+    const editBtn = `<i class="btn-outline-primary edit bi bi-pencil-square"></i>`
 
     const removeBtn = `<i class="btn-outline-danger remove bi bi-eraser"></i>`
 
@@ -58,7 +58,7 @@ dataTable.table.addEventListener('click', (e) => {
             formConstructor(formTypes.EDIT, rowContent)
         }
     }
-}, { once: true })
+})
 
 window.onload = () => {
     if (sessionStorage.getItem('register') == null)
@@ -107,7 +107,7 @@ document.addEventListener('submit', (e) => {
         editRow(dataTable, getFormData())
 
     // console.log(getFormData());
-},{once:true})
+})
 
 const getFormData = () => {
     const data = {}

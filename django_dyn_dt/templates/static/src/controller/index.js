@@ -7,16 +7,31 @@ const removeBtn = `<i class="btn-outline-danger remove bi bi-eraser"></i>`
 const toastLive = document.getElementById('liveToast')
 const toast = new bootstrap.Toast(toastLive)
 // div_datatb_{{ model_name }}
+
+const ClearModals = () => {
+
+    let modaldiv = document.querySelectorAll('.modal.fade')
+    let backdiv = document.querySelectorAll('.modal-backdrop.fade.show')
+    console.log(backdiv)
+    if (backdiv) {
+        // $('#modal .').modal().hide()
+        modaldiv.forEach((eachdiv,i) => {if(i!=0) eachdiv.remove()})
+        backdiv.forEach((eachdiv) => { eachdiv.remove()})
+    }
+}
+
 const GetNewData = async (urlpath, datatablename) => {
     // TRY to get the new HTML
-    fetch(urlpath, {
+    const newTable = fetch(urlpath, {
         method: 'GET'
     }).then(
         (response) => response
     ).then(
         (result) => result.text()
     ).then(
-        (data) => $(`#data_table`).html(data)
+        (data) => {
+            $('#data_table').html(data)
+        }
     )
 }
 
@@ -280,10 +295,9 @@ export const exportData = (dataTable, type, toRequestModelName) => {
 }
 
 export const addRow = async (dataTable, item, toRequestModelName) => {
-    const myModalEl = document.getElementById('exampleModal');
-    const modal = bootstrap.Modal.getInstance(myModalEl)
-    delete item.id
+    ClearModals()
 
+    delete item.id
     // server
     await fetch(`/datatb/${toRequestModelName}/`, {
         method: "POST",
@@ -298,31 +312,22 @@ export const addRow = async (dataTable, item, toRequestModelName) => {
         })
         .then((result) => {
             if (result.success == true) {
-                const alert = document.querySelector('.alert')
-                alert.className = alert.className.replace('d-block', 'd-none')
-
-                // let divs = document.querySelectorAll('.modal-backdrop.fade.show')
-                // divs.forEach((div) => div.remove())
-
-                setTimeout(GetNewData(`/datatb/${toRequestModelName}`, toRequestModelName), 2000)
+                // $('#exampleModal').modal('hide')
+                GetNewData(`/datatb/${toRequestModelName}`, toRequestModelName)
             }
             else {
                 console.log(result.text())
             }
-            modal.hide();
-        }).then(
-    )
+        })
         .catch((err) => {
             const alert = document.querySelector('.alert')
             alert.textContent = JSON.parse(err.toString().replace('Error: ', '')).detail
             alert.className = alert.className.replace('d-none', 'd-block')
         })
-
-
 }
 
 export const editRow = (dataTable, item, toRequestModelName) => {
-
+    ClearModals()
     const id = item.id
     // delete item.id
 
@@ -335,9 +340,7 @@ export const editRow = (dataTable, item, toRequestModelName) => {
             if (!response.ok) {
                 return response.text().then(text => { throw new Error(text) })
             } else {
-                // const myModalEl = document.getElementById('exampleModal');
-                // const modal = new bootstrap.Modal(myModalEl, {})
-                // modal.close()
+
                 return response.json()
             }
         })
@@ -345,14 +348,8 @@ export const editRow = (dataTable, item, toRequestModelName) => {
             if (result.success == true) {
                 const alert = document.querySelector('.alert')
                 alert.className = alert.className.replace('d-block', 'd-none')
+                GetNewData(`/datatb/${toRequestModelName}`, toRequestModelName);
 
-                // let divs = document.querySelectorAll('.modal.fade')
-                // divs.forEach((div) => div.remove())
-
-                // divs = document.querySelectorAll('.modal-backdrop.fade.show')
-                // divs.forEach((div) => div.remove())
-
-                setTimeout(GetNewData(`/datatb/${toRequestModelName}`, toRequestModelName), 2000)
             }
             else {
                 console.log(result.text)
@@ -370,7 +367,7 @@ export const editRow = (dataTable, item, toRequestModelName) => {
 }
 
 export const removeRow = (dataTable, item, toRequestModelName) => {
-
+    ClearModals()
     const id = dataTable.data[item].cells[0].data
     // console.log(document.getElementById(`div_datatb_${toRequestModelName}`))
     // server

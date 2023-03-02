@@ -7,6 +7,16 @@ const removeBtn = `<i class="btn-outline-danger remove bi bi-eraser"></i>`
 const toastLive = document.getElementById('liveToast')
 const toast = new bootstrap.Toast(toastLive)
 
+const GetNewData = async (urlpath) => {
+    // TRY to get the new HTML
+    fetch(urlpath, {
+        method: 'GET'
+    }).then(
+        (response) => console.log(response)
+    )
+}
+
+
 const setToastBody = (text, type) => {
     document.querySelector('.toast-body').innerHTML = text
 
@@ -44,10 +54,10 @@ export const addController = (formType) => {
     })
 }
 
-function search_action(dataTable) {
+async function search_action(dataTable) {
     let datatb = getCurrentDataTable()
     const searchValue = datatb.querySelector('#search').value
-    
+
     // dataTable.data.forEach((d, i) => {
     //     if (!dataTable.data[i].cells[1].data.includes(searchValue)) {
     //         dataTable.rows().remove(i)
@@ -62,22 +72,30 @@ function search_action(dataTable) {
 
     const Re = /(.*)_/
     let ModelName = dataTable.table.id.replace(Re, '');
-    const urlpath=`/datatb/${ModelName}`
-    const base=window.location.origin
+    const urlpath = `/datatb/${ModelName}`
+    const base = window.location.origin
     // console.log(window.location)
     const searchParams = new URLSearchParams({
-        search: searchValue 
+        search: searchValue
     })
 
     const url = new URL(`${base}${urlpath}?${searchParams}`)
     console.log(url.href)
-    fetch(url,{
-        method:'GET',
+    await fetch(url, {
+        method: 'GET',
     }).then(
-        (response)=>response.json()
-    )
-    .then(
-        (result)=>console.log(result)
+        (response) => response
+    ).then(
+        (result) => {
+            if (result.status == 200) {
+                // Get newe HTML file 
+                GetNewData(url)
+            }
+            else {
+                console.log(result.text)
+            }
+
+        }
     )
 }
 
@@ -292,9 +310,9 @@ export const addRow = async (dataTable, item, toRequestModelName) => {
             }
         })
         .then((result) => {
-            dataTable.rows().add(
-                [...Object.values({ id: result.id.toString(), ...item }), editBtn + " " + removeBtn]
-            )
+            // dataTable.rows().add(
+            //     [...Object.values({ id: result.id.toString(), ...item }), editBtn + " " + removeBtn]
+            // )
 
             const alert = document.querySelector('.alert')
             alert.className = alert.className.replace('d-block', 'd-none')
@@ -352,7 +370,7 @@ export const editRow = (dataTable, item, toRequestModelName) => {
 export const removeRow = (dataTable, item, toRequestModelName) => {
 
     const id = dataTable.data[item].cells[0].data
-
+    console.log(document.getElementById(`div_datatb_${toRequestModelName}`))
     // server
     fetch(`/datatb/${toRequestModelName}/${id}/`, {
         method: "DELETE",

@@ -155,8 +155,8 @@
 import {modelName, myData} from '{% static 'data/index.js' %}'
 import {events} from '{% static 'src/events/index.js' %}'
 import {
-   GetNewData,
-    // paginator,
+    GetNewData,
+    pageSelectController,
     removeRow,
     addRow,
     editRow,
@@ -169,13 +169,19 @@ import {
 } from '{% static 'src/controller/index.js' %}'
 import { formConstructor, formTypes } from '{% static 'src/form/index.js' %}'
 
-let formType = formTypes.ADD
 
+
+let formType = formTypes.ADD
+window.onbeforeunload=()=>{
+  sessionStorage.clear()
+}
+
+// console.log(window.location.search)
 // table
 let dataTable = new simpleDatatables.DataTable('#table_{{ model_name }}' , {
     data: myData,
     perPageSelect: [10,25,50],
-    perPage: parseInt(new URLSearchParams(window.location.search).get('entries')) || 10,
+    perPage: parseInt(sessionStorage.getItem('entries')) || 10,
     labels: {
         placeholder: "Search...",
         perPage: "{select} Items/Page",
@@ -184,6 +190,9 @@ let dataTable = new simpleDatatables.DataTable('#table_{{ model_name }}' , {
     },
     searchable: false,
 })
+
+$('.dataTable-bottom').remove()
+localStorage.setItem('entries',dataTable.options.perPage)
 document.getElementById('pagelinker').addEventListener('click',paginator)
 
 // edit & remove Button
@@ -235,20 +244,26 @@ function paginator(e) {
       // console.log(innerText)
       if (innerText==='»') {
       innerText= document.querySelectorAll('#pagenumber').length
-
     }
     if (innerText==='«') {
       innerText=1
       // console.log(innerText)
     } 
+    localStorage.setItem('page',innerText)
     const dataTableName = e.target.className.split(' ')[1]
-    document.querySelectorAll('.pagination.justify-content-center').forEach((element)=>element.remove())
-    GetNewData(`/datatb/${dataTableName}/?page=${innerText}`, dataTableName)
-    document.getElementById('pagelinker').removeEventListener('click',paginator)
+    console.log(dataTableName)
+    // document.querySelectorAll('.pagination.justify-content-center').forEach((element)=>element.remove())
+    GetNewData(dataTableName)
+    // document.getElementById('pagelinker').removeEventListener('click',paginator)
     document.removeEventListener('submit',submit)
   }
 }
 
+// console.log(document.getElementsByTagName('option').forEach((e)=>console.log(e)))
+// let options = 
+
+// for(let i =0 ;i<options.length;i++)
+//     options[i].addEventListener('click',(e)=>{console.log(e)})
 //window.onload = () => {
 //    if (sessionStorage.getItem('register') == null)
 //        localStorage.removeItem('hideColumns');
@@ -285,6 +300,8 @@ exportController(dataTable,submit)
 
 // Search Box
 search(dataTable,submit)
+
+pageSelectController(dataTable,submit)
 
 function submit(e){
 

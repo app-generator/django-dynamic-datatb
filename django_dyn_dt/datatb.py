@@ -187,6 +187,8 @@ def export(request, **kwargs):
     request_body = json.loads(request.body.decode('utf-8'))
     search_key = request_body.get('search', '')
     hidden = request_body.get('hidden_cols', [])
+    if hidden is None:
+        hidden = []
     export_type = request_body.get('type', 'csv')
     filter_options = Q()
 

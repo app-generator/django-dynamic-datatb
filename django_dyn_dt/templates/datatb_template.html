@@ -176,11 +176,12 @@ window.onbeforeunload=()=>{
   sessionStorage.clear()
 }
 
+// console.log(window.location.search)
 // table
 let dataTable = new simpleDatatables.DataTable('#table_{{ model_name }}' , {
     data: myData,
     perPageSelect: [10,25,50],
-    perPage: parseInt(new URLSearchParams(window.location.search).get('entries')) || 10,
+    perPage: parseInt(sessionStorage.getItem('entries')) || 10,
     labels: {
         placeholder: "Search...",
         perPage: "{select} Items/Page",

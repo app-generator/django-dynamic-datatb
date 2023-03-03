@@ -18,6 +18,7 @@ export function functionSaveentry(dataTable) {
     console.log(entry)
     if (entry != localStorage.getItem('entries')) {
         localStorage.setItem('entries', entry)
+        sessionStorage.setItem('entries', entry)
         const Re = /(.*)_/
         let ModelName = dataTable.table.id.replace(Re, '');
         GetNewData(ModelName)

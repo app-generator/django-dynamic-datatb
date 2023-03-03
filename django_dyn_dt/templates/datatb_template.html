@@ -284,7 +284,9 @@ exportController(dataTable,submit)
 search(dataTable)
 
 function submit(e){
-  e.preventDefault()
+
+e.preventDefault()
+// ClearModals()
     const currentForm = e.target.closest('form')
     const currentModelName = currentForm.id.replace('form_id_', '')
 

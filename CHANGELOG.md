@@ -1,5 +1,10 @@
 # Change Log
 
+## [1.0.11] 2023-03-03
+### Changes
+
+- Widget Mode Enable
+
 ## [1.0.10] 2023-02-15
 ### Changes
 

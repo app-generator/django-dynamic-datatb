@@ -31,7 +31,7 @@ export const GetNewData = async (datatablename) => {
         entries:perpage
     })
 
-    localStorage.clear()
+    // localStorage.clear()
     ClearModals(datatablename)
     await fetch(`/datatb/${datatablename}?${searchParams}`, {
         method: 'GET'
@@ -61,12 +61,9 @@ const setToastBody = (text, type) => {
 
 // Add Button + Events
 export const addController = (formType) => {
-    // window.alert('zarp')
     const myModalEl = document.getElementById('exampleModal');
     const modal = new bootstrap.Modal(myModalEl, {})
-
     const addContainer = document.createElement('div')
-
     const addBtn = document.createElement('button')
     addBtn.className = 'btn btn-primary mx-1'
     addBtn.textContent = '+'
@@ -93,6 +90,8 @@ async function search_action(dataTable) {
 
     let datatb = getCurrentDataTable()
     const searchValue = datatb.querySelector('#search').value
+
+    sessionStorage.setItem('searchValue', searchValue)
     localStorage.setItem('searchValue', searchValue)
     const Re = /(.*)_/
     let ModelName = dataTable.table.id.replace(Re, '');
@@ -278,7 +277,7 @@ export const exportController = (dataTable, submit) => {
 // Action: Export
 export const exportData = (dataTable, type, toRequestModelName) => {
     functionSaveentry(dataTable.options.perPage)
-    const searchParam = localStorage.getItem('searchValue') || ''
+    const searchParam = sessionStorage.getItem('searchValue') || ''
     const hiddenColumns = localStorage.getItem('hideColumns')
     fetch(`/datatb/${toRequestModelName}/export/`, {
         method: 'POST',

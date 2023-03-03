@@ -170,6 +170,9 @@ import {
 import { formConstructor, formTypes } from '{% static 'src/form/index.js' %}'
 
 let formType = formTypes.ADD
+window.onbeforeunload=()=>{
+  sessionStorage.clear()
+}
 
 // table
 let dataTable = new simpleDatatables.DataTable('#table_{{ model_name }}' , {

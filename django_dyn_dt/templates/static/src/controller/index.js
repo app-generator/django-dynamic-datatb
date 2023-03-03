@@ -3,6 +3,9 @@ import { formConstructor, formTypes } from "../form/index.js";
 
 const toastLive = document.getElementById('liveToast')
 const toast = new bootstrap.Toast(toastLive)
+function functionSaveentry(entry){
+    localStorage.setItem('entries',entry)
+}
 
 const ClearModals = (datatablename) => {
 
@@ -19,9 +22,18 @@ const ClearModals = (datatablename) => {
     }
 }
 
-export const GetNewData = async (urlpath, datatablename) => {
+export const GetNewData = async (datatablename) => {
+    const search=localStorage.getItem('searchValue') || '';
+    const perpage=localStorage.getItem('entries') || 10;
+     
+    const searchParams = new URLSearchParams({
+        search: search,
+        entries:perpage
+    })
+
+    localStorage.clear()
     ClearModals(datatablename)
-    await fetch(urlpath, {
+    await fetch(`/datatb/${datatablename}?${searchParams}`, {
         method: 'GET'
     }).then(
         (response) => response
@@ -78,32 +90,34 @@ export const addController = (formType) => {
 }
 
 async function search_action(dataTable) {
+
     let datatb = getCurrentDataTable()
     const searchValue = datatb.querySelector('#search').value
-    localStorage.setItem('searchValue',searchValue)
+    localStorage.setItem('searchValue', searchValue)
     const Re = /(.*)_/
     let ModelName = dataTable.table.id.replace(Re, '');
-    const urlpath = `/datatb/${ModelName}`
-    const base = window.location.origin
-    const searchParams = new URLSearchParams({
-        search: searchValue
-    })
+    // const urlpath = `/datatb/${ModelName}`
+    // const base = window.location.origin
+    // const searchParams = new URLSearchParams({
+    //     search: searchValue
+    // })
 
-    const url = new URL(`${base}${urlpath}?${searchParams}`)
-    const fecthfun = async () => {
-        await fetch(url, {
-            method: 'GET',
-        }).then(
-            (response) => response
-        )
-    }
-    fecthfun()
-    GetNewData(url, ModelName)
+    // const url = new URL(`${base}${urlpath}?${searchParams}`)
+    // const fecthfun = async () => {
+    //     await fetch(url, {
+    //         method: 'GET',
+    //     }).then(
+    //         (response) => response
+    //     )
+    // }
+    // fecthfun()
+    // GetNewData(url, ModelName)
+    functionSaveentry(dataTable.options.perPage)
+    GetNewData(ModelName)
 }
 
 // Search Box + Events
-export const search = (dataTable) => {
-
+export const search = (dataTable, submit) => {
     const searchContainer = document.createElement('div')
     searchContainer.className = 'd-flex'
     searchContainer.id = 'search-container'
@@ -137,6 +151,7 @@ export const search = (dataTable) => {
     datatb.querySelector('#search-btn').addEventListener('click', () => {
         search_action(dataTable);
     })
+    document.removeEventListener('submit', submit);
 }
 
 // Unused 
@@ -262,7 +277,7 @@ export const exportController = (dataTable, submit) => {
 
 // Action: Export
 export const exportData = (dataTable, type, toRequestModelName) => {
-    console.log()
+    functionSaveentry(dataTable.options.perPage)
     const searchParam = localStorage.getItem('searchValue') || ''
     const hiddenColumns = localStorage.getItem('hideColumns')
     fetch(`/datatb/${toRequestModelName}/export/`, {
@@ -293,6 +308,7 @@ export const exportData = (dataTable, type, toRequestModelName) => {
 
 
 export const addRow = (dataTable, item, toRequestModelName) => {
+    functionSaveentry(dataTable.options.perPage)
     delete item.id
     const fetchfun = async () => {
         await fetch(`/datatb/${toRequestModelName}/`, {
@@ -314,12 +330,13 @@ export const addRow = (dataTable, item, toRequestModelName) => {
     }
     fetchfun()
 
-    GetNewData(`/datatb/${toRequestModelName}`, toRequestModelName)
+    GetNewData(toRequestModelName)
 }
 
 export const editRow = (dataTable, item, toRequestModelName) => {
-    console.log(dataTable)
+    functionSaveentry(dataTable.options.perPage)
     // console.log(dataTable.data)
+
     const id = item.id
 
     const fetchfun = async () => {
@@ -343,12 +360,13 @@ export const editRow = (dataTable, item, toRequestModelName) => {
     }
     fetchfun()
 
-    GetNewData(`/datatb/${toRequestModelName}`, toRequestModelName)
+    // GetNewData(`/datatb/${toRequestModelName}`, toRequestModelName)
+    GetNewData(toRequestModelName)
 }
 
 
 export const removeRow = (dataTable, item, toRequestModelName) => {
-
+    functionSaveentry(dataTable.options.perPage)
     const id = dataTable.data[item].cells[0].data
     const fetchfun = async () => {
         await fetch(`/datatb/${toRequestModelName}/${id}/`, {
@@ -377,7 +395,8 @@ export const removeRow = (dataTable, item, toRequestModelName) => {
             })
     }
     fetchfun()
-    GetNewData(`/datatb/${toRequestModelName}`, toRequestModelName)
+    // GetNewData(`/datatb/${toRequestModelName}`, toRequestModelName)
+    GetNewData(toRequestModelName)
 }
 
 export const getCurrentDataTable = () => {

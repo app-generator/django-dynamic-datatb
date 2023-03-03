@@ -45,6 +45,7 @@ export const GetNewData = async (urlpath, datatablename) => {
         (result) => result.text()
     ).then(
         (data) => {
+            // console.log(data)
             $(`#div_datatb_${datatablename}`).html(data)
         }
     )
@@ -76,7 +77,7 @@ export const addController = (formType) => {
     addBtn.id = 'add'
 
     addBtn.onclick = null;
-    // $('#add').unbind()
+
 
     addContainer.appendChild(addBtn)
     let datatb = getCurrentDataTable()
@@ -348,7 +349,7 @@ export const addRow = (dataTable, item, toRequestModelName) => {
 }
 
 export const editRow = (dataTable, item, toRequestModelName) => {
-
+    console.log(dataTable)
     const id = item.id
 
     const fetchfun = async () => {

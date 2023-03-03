@@ -77,10 +77,8 @@
      </div>
      </ul>
    </nav>
-  </div>
-</div>
-    <!-- Edit/Create Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" >
+   <!-- Edit/Create Modal -->
+   <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" >
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
@@ -90,7 +88,7 @@
 
           <form id="form_id_{{ model_name }}">{% csrf_token %}
 
-          <div class="modal-body" id="form">
+            <div class="modal-body" id="form">
           </div>
 
           <div class="modal-footer">
@@ -98,14 +96,16 @@
             <input type="submit" class="btn btn-primary modal-btn"/>
           </div>
         </form>
-
-
-            <div class="alert alert-danger m-3 mt-0 d-none" role="alert">
-            </div>
+        
+        
+        <div class="alert alert-danger m-3 mt-0 d-none" role="alert">
         </div>
       </div>
     </div>
-
+  </div>
+</div>
+</div>
+  
     <!-- Notification Toast -->
     <div class="toast-container position-fixed bottom-0 start-0 p-3 " >
       <div id="liveToast" class="toast text-light bg-primary" data-bs-autohide="false" role="alert" aria-live="assertive" aria-atomic="true">
@@ -115,11 +115,11 @@
           </div>
           <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
       </div>
-      </div>
     </div>
-
-    <!-- Context injected from Backend -->
-    <script type="module">
+  </div>
+  
+  <!-- Context injected from Backend -->
+  <script type="module">
 
       import {setData , setModelName} from '{% static 'data/index.js' %}'
 

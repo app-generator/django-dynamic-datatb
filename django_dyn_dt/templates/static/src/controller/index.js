@@ -80,7 +80,7 @@ export const addController = (formType) => {
 async function search_action(dataTable) {
     let datatb = getCurrentDataTable()
     const searchValue = datatb.querySelector('#search').value
-
+    localStorage.setItem('searchValue',searchValue)
     const Re = /(.*)_/
     let ModelName = dataTable.table.id.replace(Re, '');
     const urlpath = `/datatb/${ModelName}`
@@ -95,16 +95,6 @@ async function search_action(dataTable) {
             method: 'GET',
         }).then(
             (response) => response
-        ).then(
-            (result) => {
-                if (result.status == 200) {
-
-                }
-                else {
-                    console.log(result.text())
-                }
-
-            }
         )
     }
     fecthfun()
@@ -268,15 +258,13 @@ export const exportController = (dataTable, submit) => {
         datatb.querySelector('#dropdownMenuButton1')
     )
 
-    //document.querySelector('.dropdown').appendChild(exportContainer);
 }
 
 // Action: Export
 export const exportData = (dataTable, type, toRequestModelName) => {
     console.log()
-    const searchParam = new URLSearchParams(window.location.search).get('search') || ''
+    const searchParam = localStorage.getItem('searchValue') || ''
     const hiddenColumns = localStorage.getItem('hideColumns')
-    // console.log(searchParam)
     fetch(`/datatb/${toRequestModelName}/export/`, {
         method: 'POST',
         body: JSON.stringify({
@@ -305,8 +293,6 @@ export const exportData = (dataTable, type, toRequestModelName) => {
 
 
 export const addRow = (dataTable, item, toRequestModelName) => {
-    // document.removeEventListener('submit',docFun)
-
     delete item.id
     const fetchfun = async () => {
         await fetch(`/datatb/${toRequestModelName}/`, {

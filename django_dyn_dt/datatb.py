@@ -207,11 +207,12 @@ def export(request, **kwargs):
         for heading in headings:
             this_row.append(getattr(data, heading))
         table_data.append(this_row)
-
     df = pd.DataFrame(
         table_data,
         columns=tuple(heading for heading in headings))
-    if export_type == 'pdf':
+    if len(table_data) == 0:
+        base64encoded = ''
+    elif export_type == 'pdf':
         base64encoded = get_pdf(df)
     elif export_type == 'xlsx':
         base64encoded = get_excel(df)

@@ -25,57 +25,62 @@
             <table id="table_{{ model_name }}" ></table>
         </div>
 
-    </div>
+
 
     <!--Pagination-->
     <nav aria-label="Page navigation example">
+      
       <ul class="pagination justify-content-center">
-      {% if has_prev %}
+          <div id="pagelinker" style="display: flex">
+          {% if has_prev %}
           <li class="page-item">
-          <a class="page-link" href="?page={{ current_page|add:"-1" }}&entries={{ entries }}&search={{ search }}"> &laquo; </a>
+          <a class="page-link {{model_name}}"  > &laquo; </a>
         </li>
       {% else %}
           <li class="page-item disabled">
-          <a class="page-link" href="#" tabindex="-1" aria-disabled="True"> &laquo; </a>
+          <a class="page-link {{model_name}}" tabindex="-1"  aria-disabled="True"> &laquo; </a>
         </li>
-
         {% endif %}
 
-      {% if current_page|add:'-4' > 1 %}
-          <li class="page-item"><a class="page-link" >&hellip;</a></li>
+        {% if current_page|add:'-4' > 1 %}
+        <li class="page-item"><a class="page-link {{model_name}}" 
+          
+          >&hellip;</a></li>
       {% endif %}
 
       {% for i in total_pages %}
           {% if current_page == i %}
-              <li class="page-item active" aria-current="page">
-              <a class="page-link {{model_name}}" >
-                  {{ i }}
+              <li class="page-item active" id="pagenumber" aria-current="page">
+              <a class="page-link {{model_name}}">
+                {{ i }}
               </a>
           </li>
           {% else  %}
-               <li class="page-item"><a class="page-link {{model_name}}" id="pagelinker">{{ i }}</a></li>
+               <li class="page-item" id="pagenumber"><a class="page-link {{model_name}}" >{{ i }}</a></li>
           {% endif %}
       {% endfor %}
 
       {% if total_pages|length > current_page|add:'4' %}
-         <li class="page-item"><a class="page-link" >&hellip;</a></li>
+         <li class="page-item"><a class="page-link {{model_name}}"  >&hellip;</a></li>
       {% endif %}
 
-      {% if has_next %}
+      {% if not has_next %}
           <li class="page-item">
           <!-- <a class="page-link" href="?page={{ current_page|add:"1" }}&entries={{ entries }}&search={{ search }}"> &raquo; </a> -->
-          <a class="page-link {{model_name}}" id="pagelinker" > &raquo; </a>
+          <a class="page-link {{model_name}}"  > &raquo; </a>
         </li>
       {% else %}
           <li class="page-item disabled">
-          <a class="page-link" id="pagelinker" tabindex="-1" aria-disabled="True"> &raquo; </a>
+          <a class="page-link {{model_name}}"  tabindex="-1" aria-disabled="True"> &raquo; </a>
         </li>
       {% endif %}
-    </ul>
-  </nav>
+     </div>
+     </ul>
+   </nav>
+  </div>
 </div>
     <!-- Edit/Create Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" >
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
@@ -150,7 +155,8 @@
 import {modelName, myData} from '{% static 'data/index.js' %}'
 import {events} from '{% static 'src/events/index.js' %}'
 import {
-    paginator,
+   GetNewData,
+    // paginator,
     removeRow,
     addRow,
     editRow,
@@ -180,7 +186,6 @@ let dataTable = new simpleDatatables.DataTable('#table_{{ model_name }}' , {
 })
 document.getElementById('pagelinker').addEventListener('click',paginator)
 
-
 // edit & remove Button
 const newColumn = []
 myData.data.forEach((d,i) => {
@@ -197,7 +202,8 @@ dataTable.columns().add({
     data: newColumn
 })
         // add funcs
-dataTable.table.addEventListener('click', (e) => {
+
+function dataTableEventListener(e)  {
   e.preventDefault()
     if (e.target.nodeName === 'I' ) {
         const row = e.target.closest('tr');
@@ -211,9 +217,34 @@ dataTable.table.addEventListener('click', (e) => {
             const rowContent = [].slice.call(dataTable.data[row.dataIndex].cells).map((cell) => { return cell.textContent; });
             formType = formTypes.EDIT
             formConstructor(formTypes.EDIT,rowContent)
-        }
+
+          }
     }
-})
+}
+
+
+dataTable.table.addEventListener('click', dataTableEventListener)
+
+function paginator(e) {
+    // console.log(e)
+    if (!e.target.innerHTML.includes('disabled')){
+      let innerText = e.target.innerText
+      // console.log(innerText)
+      if (innerText==='»') {
+      innerText= document.querySelectorAll('#pagenumber').length
+
+    }
+    if (innerText==='«') {
+      innerText=1
+      // console.log(innerText)
+    } 
+    const dataTableName = e.target.className.split(' ')[1]
+    document.querySelectorAll('.pagination.justify-content-center').forEach((element)=>element.remove())
+    GetNewData(`/datatb/${dataTableName}/?page=${innerText}`, dataTableName)
+    document.getElementById('pagelinker').removeEventListener('click',paginator)
+    document.removeEventListener('submit',submit)
+  }
+}
 
 //window.onload = () => {
 //    if (sessionStorage.getItem('register') == null)
@@ -247,7 +278,7 @@ columnsManage(dataTable)
 addController(formType)
 
 // export
-exportController(dataTable)
+exportController(dataTable,submit)
 
 // Search Box
 search(dataTable)
@@ -264,8 +295,7 @@ function submit(e){
     else if (formType === formTypes.EDIT){
     const item_data=getFormData()    
     editRow(dataTable,item_data , currentModelName)
-    document.removeEventListener('submit',submit)
-      }}
+    document.removeEventListener('submit',submit)}}
 
 document.addEventListener('submit',submit)
 

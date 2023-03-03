@@ -1,32 +1,41 @@
 import { modelName, myData } from "../../data/index.js";
 import { formConstructor, formTypes } from "../form/index.js";
 
-const editBtn = `<i class="btn-outline-primary edit bi bi-pencil-square" data-bs-toggle="modal" data-bs-target="#exampleModal"></i>`
-const removeBtn = `<i class="btn-outline-danger remove bi bi-eraser"></i>`
+// const editBtn = `<i class="btn-outline-primary edit bi bi-pencil-square" data-bs-toggle="modal" data-bs-target="#exampleModal"></i>`
+// const removeBtn = `<i class="btn-outline-danger remove bi bi-eraser"></i>`
 
 const toastLive = document.getElementById('liveToast')
 const toast = new bootstrap.Toast(toastLive)
 // div_datatb_{{ model_name }}
 
-export function paginator(e) {
-    const number = e.target.innerHTML
-    const dataTableName=e.target.className.split(' ')[1]
-    document.querySelector('.pagination.justify-content-center').remove()
-    GetNewData(`/datatb/${dataTableName}/?page=${number}`,dataTableName)
- }
+// export function paginator(e) {
+//     // console.log(e)
+//     let innerHTML = e.target.innerHTML
+    
+//     if (innerHTML===' » ') {
+//         innerHTML= document.querySelectorAll('.page-item.active').length
+//     }
+//     if (innerHTML===' « ') {
+//         innerHTML=1
+//     } 
+//  //   // console.log(innerHTML)
+//     const dataTableName = e.target.className.split(' ')[1]
+//     document.querySelector('.pagination.justify-content-center').remove()
+//     GetNewData(`/datatb/${dataTableName}/?page=${innerHTML}`, dataTableName)
+// }
 
 const ClearModals = () => {
     let modaldiv = document.querySelectorAll('.modal.fade.show')
     let backdiv = document.querySelectorAll('.modal-backdrop.fade.show')
-    console.log(backdiv)
+    // console.log(backdiv)
     if (backdiv) {
         backdiv.forEach((eachdiv) => { eachdiv.remove() })
         modaldiv.forEach((eachdiv, i) => { eachdiv.remove() })
     }
-    console.log(document.querySelectorAll('.modal-backdrop.fade.show'))
+    // console.log(document.querySelectorAll('.modal-backdrop.fade.show'))
 }
 
-const GetNewData = async (urlpath, datatablename) => {
+export const GetNewData = async (urlpath, datatablename) => {
     ClearModals()
     await fetch(urlpath, {
         method: 'GET'
@@ -96,7 +105,6 @@ async function search_action(dataTable) {
     })
 
     const url = new URL(`${base}${urlpath}?${searchParams}`)
-    // console.log(url.href)
     const fecthfun = async () => {
         await fetch(url, {
             method: 'GET',
@@ -235,7 +243,7 @@ export const columnsManage = (dataTable) => {
 }
 
 // Export layout
-export const exportController = (dataTable) => {
+export const exportController = (dataTable,submit) => {
 
     const exportContainer = document.createElement('div')
     exportContainer.id = 'export-container'
@@ -261,7 +269,8 @@ export const exportController = (dataTable) => {
         if (e.target.nodeName === 'IMG') {
             const Re = /(.*)_/
             let ModelName = dataTable.table.id.replace(Re, '');
-            exportData(dataTable, e.target.id, ModelName)
+            exportData(dataTable, e.target.id, ModelName);
+            document.removeEventListener('submit',submit);
         }
     })
 

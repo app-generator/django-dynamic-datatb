@@ -37,12 +37,12 @@ const ClearModals = (datatablename) => {
 export const GetNewData = async (datatablename) => {
     const search = localStorage.getItem('searchValue') || '';
     const perpage = localStorage.getItem('entries') || 10;
-    // const page = localStorage.getItem('page')|| 10;
+    const page = localStorage.getItem('page')|| 1;
 
     const searchParams = new URLSearchParams({
         search: search,
         entries: perpage,
-        // page:page
+        page:page
     })
 
     localStorage.clear()

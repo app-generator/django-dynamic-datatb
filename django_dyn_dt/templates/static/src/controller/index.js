@@ -31,7 +31,7 @@ export const GetNewData = async (datatablename) => {
         entries:perpage
     })
 
-    // localStorage.clear()
+    localStorage.clear()
     ClearModals(datatablename)
     await fetch(`/datatb/${datatablename}?${searchParams}`, {
         method: 'GET'

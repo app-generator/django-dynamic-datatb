@@ -169,6 +169,8 @@ import {
 } from '{% static 'src/controller/index.js' %}'
 import { formConstructor, formTypes } from '{% static 'src/form/index.js' %}'
 
+
+
 let formType = formTypes.ADD
 window.onbeforeunload=()=>{
   sessionStorage.clear()
@@ -187,6 +189,8 @@ let dataTable = new simpleDatatables.DataTable('#table_{{ model_name }}' , {
     },
     searchable: false,
 })
+
+$('.dataTable-bottom').remove()
 localStorage.setItem('entries',dataTable.options.perPage)
 document.getElementById('pagelinker').addEventListener('click',paginator)
 

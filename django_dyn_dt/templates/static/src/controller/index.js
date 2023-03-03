@@ -304,6 +304,7 @@ export const exportData = (dataTable, type, toRequestModelName) => {
         .catch((err) => {
             console.log(err.toString())
         })
+        localStorage.clear()
 }
 
 

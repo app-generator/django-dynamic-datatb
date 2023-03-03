@@ -1,21 +1,31 @@
+import base64
 import json
 import math
+import os
 from typing import List
 
 import django.db.models
+import pandas as pd
 from django import views
 from django.db.models import Q
 from django.forms import DateField
 from django import shortcuts
 from django.http import HttpResponse
 from django.template import loader
+from django.utils.crypto import get_random_string
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+from matplotlib.backends.backend_pdf import PdfPages
+
 from django_dyn_dt.helpers import Utils
+
+mpl.use('PDF')
 
 
 class DataTB(views.View):
     tables_pool = {}
 
-    def __init__(self, model_class_path: str=None, **kwargs):
+    def __init__(self, model_class_path: str = None, **kwargs):
         super().__init__(**kwargs)
         if model_class_path is None:
             return
@@ -169,3 +179,87 @@ class DataTB(views.View):
             'message': 'Record Updated.',
             'success': True
         }), status=200)
+
+
+def export(request, **kwargs):
+    model_name = kwargs.get('model_name', '')
+    datatb = DataTB.find_self(model_name)
+    request_body = json.loads(request.body.decode('utf-8'))
+    search_key = request_body.get('search', '')
+    hidden = request_body.get('hidden_cols', [])
+    export_type = request_body.get('type', 'csv')
+    filter_options = Q()
+
+    headings = filter(lambda field: field not in hidden, datatb._get_headings(datatb.model_class))
+    headings = list(headings)
+    for field in headings:
+        try:
+            filter_options = filter_options | Q(**{field + '__icontains': search_key})
+        except Exception as _:
+            pass
+
+    all_data = datatb.model_class.objects.filter(filter_options)
+    table_data = []
+    for data in all_data:
+        this_row = []
+        for heading in headings:
+            this_row.append(getattr(data, heading))
+        table_data.append(this_row)
+
+    df = pd.DataFrame(
+        table_data,
+        columns=tuple(heading for heading in headings))
+    if export_type == 'pdf':
+        base64encoded = get_pdf(df)
+    elif export_type == 'xlsx':
+        base64encoded = get_excel(df)
+    elif export_type == 'csv':
+        base64encoded = get_csv(df)
+    else:
+        base64encoded = 'nothing'
+
+    return HttpResponse(json.dumps({
+        'content': base64encoded,
+        'file_format': export_type,
+        'success': True
+    }), status=200)
+
+
+def get_pdf(data_frame, ):
+    fig, ax = plt.subplots(figsize=(12, 4))
+    ax.axis('tight')
+    ax.axis('off')
+    ax.table(cellText=data_frame.values, colLabels=data_frame.columns, loc='center',
+             colLoc='center', )
+    random_file_name = get_random_string(10) + '.pdf'
+    pp = PdfPages(random_file_name)
+    pp.savefig(fig, bbox_inches='tight')
+    pp.close()
+    bytess = read_file_and_remove(random_file_name)
+    return base64.b64encode(bytess).decode('utf-8')
+
+
+def get_excel(data_frame, ):
+    random_file_name = get_random_string(10) + '.xlsx'
+
+    data_frame.to_excel(random_file_name, index=False, header=True, encoding='utf-8')
+    bytess = read_file_and_remove(random_file_name)
+    return base64.b64encode(bytess).decode('utf-8')
+
+
+def get_csv(data_frame, ):
+    random_file_name = get_random_string(10) + '.csv'
+
+    data_frame.to_csv(random_file_name, index=False, header=True, encoding='utf-8')
+    bytess = read_file_and_remove(random_file_name)
+    return base64.b64encode(bytess).decode('utf-8')
+
+
+def read_file_and_remove(path):
+    with open(path, 'rb') as file:
+        bytess = file.read()
+        file.close()
+
+    # ths file pointer should be closed before removal
+    os.remove(path)
+    return bytess

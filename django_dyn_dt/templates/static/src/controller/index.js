@@ -3,19 +3,31 @@ import { formConstructor, formTypes } from "../form/index.js";
 
 const toastLive = document.getElementById('liveToast')
 const toast = new bootstrap.Toast(toastLive)
-function functionSaveentry(entry){
-    localStorage.setItem('entries',entry)
+
+export function pageSelectController(dataTable, submit){
+    document.querySelector('.dataTable-selector').addEventListener('click',()=>{
+        functionSaveentry(dataTable)
+        document.removeEventListener('submit', submit)
+    })
+}
+
+
+export function functionSaveentry(dataTable) {
+
+    let entry = $('.dataTable-selector').find(':selected').text()
+    console.log(entry)
+    if (entry != localStorage.getItem('entries')) {
+        localStorage.setItem('entries', entry)
+        const Re = /(.*)_/
+        let ModelName = dataTable.table.id.replace(Re, '');
+        GetNewData(ModelName)
+    }
 }
 
 const ClearModals = (datatablename) => {
-
     let modaldiv = document.querySelectorAll('.modal.fade.show')
     let backdiv = document.querySelectorAll('.modal-backdrop.fade.show')
-    let elements = document.querySelectorAll(`#div_datatb_${datatablename}`)
-    console.log(
-        $(`#div_datatb_${datatablename}`).unbind('click')
-    )
-    elements.forEach(Eachelement => { Eachelement.replaceWith(Eachelement.cloneNode(true)); })
+
     if (backdiv) {
         backdiv.forEach((eachdiv) => { eachdiv.remove() })
         modaldiv.forEach((eachdiv, i) => { eachdiv.remove() })
@@ -23,12 +35,14 @@ const ClearModals = (datatablename) => {
 }
 
 export const GetNewData = async (datatablename) => {
-    const search=localStorage.getItem('searchValue') || '';
-    const perpage=localStorage.getItem('entries') || 10;
-     
+    const search = localStorage.getItem('searchValue') || '';
+    const perpage = localStorage.getItem('entries') || 10;
+    // const page = localStorage.getItem('page')|| 10;
+
     const searchParams = new URLSearchParams({
         search: search,
-        entries:perpage
+        entries: perpage,
+        // page:page
     })
 
     localStorage.clear()
@@ -111,12 +125,14 @@ async function search_action(dataTable) {
     // }
     // fecthfun()
     // GetNewData(url, ModelName)
-    functionSaveentry(dataTable.options.perPage)
+    // functionSaveentry(dataTable.options.perPage)
     GetNewData(ModelName)
 }
 
 // Search Box + Events
 export const search = (dataTable, submit) => {
+    // console.log(dataTable)
+    // console.log(dataTable.perpage)
     const searchContainer = document.createElement('div')
     searchContainer.className = 'd-flex'
     searchContainer.id = 'search-container'
@@ -276,7 +292,7 @@ export const exportController = (dataTable, submit) => {
 
 // Action: Export
 export const exportData = (dataTable, type, toRequestModelName) => {
-    functionSaveentry(dataTable.options.perPage)
+    // functionSaveentry(dataTable.options.perPage)
     const searchParam = sessionStorage.getItem('searchValue') || ''
     const hiddenColumns = localStorage.getItem('hideColumns')
     fetch(`/datatb/${toRequestModelName}/export/`, {
@@ -303,12 +319,12 @@ export const exportData = (dataTable, type, toRequestModelName) => {
         .catch((err) => {
             console.log(err.toString())
         })
-        localStorage.clear()
+    localStorage.clear()
 }
 
 
 export const addRow = (dataTable, item, toRequestModelName) => {
-    functionSaveentry(dataTable.options.perPage)
+    // functionSaveentry(dataTable.options.perPage)
     delete item.id
     const fetchfun = async () => {
         await fetch(`/datatb/${toRequestModelName}/`, {
@@ -334,7 +350,7 @@ export const addRow = (dataTable, item, toRequestModelName) => {
 }
 
 export const editRow = (dataTable, item, toRequestModelName) => {
-    functionSaveentry(dataTable.options.perPage)
+    // functionSaveentry(dataTable.options.perPage)
     // console.log(dataTable.data)
 
     const id = item.id
@@ -366,7 +382,7 @@ export const editRow = (dataTable, item, toRequestModelName) => {
 
 
 export const removeRow = (dataTable, item, toRequestModelName) => {
-    functionSaveentry(dataTable.options.perPage)
+    // functionSaveentry(dataTable.options.perPage)
     const id = dataTable.data[item].cells[0].data
     const fetchfun = async () => {
         await fetch(`/datatb/${toRequestModelName}/${id}/`, {

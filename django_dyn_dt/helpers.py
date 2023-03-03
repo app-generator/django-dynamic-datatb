@@ -42,7 +42,11 @@ class Utils:
         module = importlib.import_module(model_import)
         cls = getattr(module, model_name)
 
-        return cls 
+        return cls
+
+    @staticmethod
+    def get_model_name_from_path(path):
+        return path.split('.')[-1]
 
 def check_permission(function):
     @wraps(function)

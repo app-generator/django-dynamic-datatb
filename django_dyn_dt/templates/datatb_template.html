@@ -1,0 +1,327 @@
+{% load static %}
+<div id="data_table" >
+ <!-- data-tables -->
+    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" type="text/css">
+    <script src="https://cdn.jsdelivr.net/npm/simple-datatables@3.2.0"               type="text/javascript"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <!-- bootstrap5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+    <!-- Icon -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.2/font/bootstrap-icons.css">
+
+    <link rel="stylesheet" href="{% static 'src/style/myStyle.css' %}">
+
+    <div id="div_datatb_{{ model_name }}" class="d-flex flex-column mx-5" style="width:fit-content">
+
+        <!-- page title -->
+        <div class="header p-3 pb-0 item d-flex justify-content-between">
+            <h1 class="model-name">Model Name</h1>
+        </div>
+
+        <!-- DATA Container -->
+        <div class="p-3 rounded bg-light item">
+            <table id="table_{{ model_name }}" ></table>
+        </div>
+
+
+
+    <!--Pagination-->
+    <nav aria-label="Page navigation example">
+      
+      <ul class="pagination justify-content-center">
+          <div id="pagelinker" style="display: flex">
+          {% if has_prev %}
+          <li class="page-item">
+          <a class="page-link {{model_name}}"  > &laquo; </a>
+        </li>
+      {% else %}
+          <li class="page-item disabled">
+          <a class="page-link {{model_name}}" tabindex="-1"  aria-disabled="True"> &laquo; </a>
+        </li>
+        {% endif %}
+
+        {% if current_page|add:'-4' > 1 %}
+        <li class="page-item"><a class="page-link {{model_name}}" 
+          
+          >&hellip;</a></li>
+      {% endif %}
+
+      {% for i in total_pages %}
+          {% if current_page == i %}
+              <li class="page-item active" id="pagenumber" aria-current="page">
+              <a class="page-link {{model_name}}">
+                {{ i }}
+              </a>
+          </li>
+          {% else  %}
+               <li class="page-item" id="pagenumber"><a class="page-link {{model_name}}" >{{ i }}</a></li>
+          {% endif %}
+      {% endfor %}
+
+      {% if total_pages|length > current_page|add:'4' %}
+         <li class="page-item"><a class="page-link {{model_name}}"  >&hellip;</a></li>
+      {% endif %}
+
+      {% if not has_next %}
+          <li class="page-item">
+          <!-- <a class="page-link" href="?page={{ current_page|add:"1" }}&entries={{ entries }}&search={{ search }}"> &raquo; </a> -->
+          <a class="page-link {{model_name}}"  > &raquo; </a>
+        </li>
+      {% else %}
+          <li class="page-item disabled">
+          <a class="page-link {{model_name}}"  tabindex="-1" aria-disabled="True"> &raquo; </a>
+        </li>
+      {% endif %}
+     </div>
+     </ul>
+   </nav>
+   <!-- Edit/Create Modal -->
+   <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+
+          <form id="form_id_{{ model_name }}">{% csrf_token %}
+
+            <div class="modal-body" id="form">
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <input type="submit" class="btn btn-primary modal-btn"/>
+          </div>
+        </form>
+        
+        
+        <div class="alert alert-danger m-3 mt-0 d-none" role="alert">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+  
+    <!-- Notification Toast -->
+    <div class="toast-container position-fixed bottom-0 start-0 p-3 " >
+      <div id="liveToast" class="toast text-light bg-primary" data-bs-autohide="false" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+          <div class="toast-body">
+            Hello! This is a sample toast.
+          </div>
+          <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Context injected from Backend -->
+  <script type="module">
+
+      import {setData , setModelName} from '{% static 'data/index.js' %}'
+
+      const headings = [
+        {% for item in headings %}
+          '{{ item }}',
+        {% endfor %}
+      ];
+
+      const data = [
+        {% for item in data %}
+            [{% for i in item %}
+                '{{ i }}',
+            {% endfor %}],
+        {% endfor %}
+      ];
+
+      const isDate = [
+          {% for item in is_date %}
+              '{{ item }}',
+          {% endfor %}
+      ];
+
+      setData(headings , data , isDate);
+
+      setModelName(
+          '{{ model_name }}'
+      );
+
+    </script>
+
+    <script type="module">
+import {modelName, myData} from '{% static 'data/index.js' %}'
+import {events} from '{% static 'src/events/index.js' %}'
+import {
+   GetNewData,
+    // paginator,
+    removeRow,
+    addRow,
+    editRow,
+    search,
+    columnsManage,
+    exportController,
+    addController,
+    middleContainer,
+    getCurrentDataTable,
+} from '{% static 'src/controller/index.js' %}'
+import { formConstructor, formTypes } from '{% static 'src/form/index.js' %}'
+
+let formType = formTypes.ADD
+
+// table
+let dataTable = new simpleDatatables.DataTable('#table_{{ model_name }}' , {
+    data: myData,
+    perPageSelect: [10,25,50],
+    perPage: parseInt(new URLSearchParams(window.location.search).get('entries')) || 10,
+    labels: {
+        placeholder: "Search...",
+        perPage: "{select} Items/Page",
+        noRows: "No entries to found",
+        info: "Showing {start} to {end} of {rows} entries",
+    },
+    searchable: false,
+})
+document.getElementById('pagelinker').addEventListener('click',paginator)
+
+// edit & remove Button
+const newColumn = []
+myData.data.forEach((d,i) => {
+
+    const editBtn = `<i class="btn-outline-primary edit bi bi-pencil-square" data-bs-toggle="modal" data-bs-target="#exampleModal"></i>`
+
+    const removeBtn = `<i class="btn-outline-danger remove bi bi-eraser"></i>`
+
+    newColumn.push(editBtn + " &nbsp; " + removeBtn)
+})
+        // add buttons
+dataTable.columns().add({
+    heading: '',
+    data: newColumn
+})
+        // add funcs
+
+function dataTableEventListener(e)  {
+  e.preventDefault()
+  // console.log(e.target.nodeName)
+    if (e.target.nodeName === 'I' ) {
+        const row = e.target.closest('tr');
+        const currentDatatb = e.target.closest('table')
+        const currentModelName = currentDatatb.id.replace('table_', '')
+        if (e.target.className.includes('remove')) {
+            removeRow(dataTable,row.dataIndex,currentModelName)
+            document.removeEventListener('submit',submit)
+        }
+
+
+        else if (e.target.className.includes('edit')) {
+            const rowContent = [].slice.call(dataTable.data[row.dataIndex].cells).map((cell) => { return cell.textContent; });
+            formType = formTypes.EDIT
+            formConstructor(formTypes.EDIT,rowContent)
+
+          }
+    }
+}
+
+
+dataTable.table.addEventListener('click', dataTableEventListener)
+
+function paginator(e) {
+    // console.log(e)
+    if (!e.target.innerHTML.includes('disabled')){
+      let innerText = e.target.innerText
+      // console.log(innerText)
+      if (innerText==='»') {
+      innerText= document.querySelectorAll('#pagenumber').length
+
+    }
+    if (innerText==='«') {
+      innerText=1
+      // console.log(innerText)
+    } 
+    const dataTableName = e.target.className.split(' ')[1]
+    document.querySelectorAll('.pagination.justify-content-center').forEach((element)=>element.remove())
+    GetNewData(`/datatb/${dataTableName}/?page=${innerText}`, dataTableName)
+    document.getElementById('pagelinker').removeEventListener('click',paginator)
+    document.removeEventListener('submit',submit)
+  }
+}
+
+//window.onload = () => {
+//    if (sessionStorage.getItem('register') == null)
+//        localStorage.removeItem('hideColumns');
+//
+//    sessionStorage.setItem('register', 1);
+//
+//    const hideColumns = JSON.parse(localStorage.getItem('hideColumns'))
+//    hideColumns.forEach(d => {
+//        dataTable.columns().hide([myData.headings.indexOf(d)])
+//    })
+//
+//    const els = document.getElementsByClassName('form-check-input')
+//    Array.prototype.forEach.call(els, function(el) {
+//        if (hideColumns.includes(el.id)) {
+//            el.checked = true
+//        }
+//    });
+//}
+
+// events
+events(dataTable)
+
+// To be coded
+//middleContainer(dataTable)
+
+// columns manage
+columnsManage(dataTable)
+
+// add
+addController(formType)
+
+// export
+exportController(dataTable,submit)
+
+// Search Box
+search(dataTable,submit)
+
+function submit(e){
+
+e.preventDefault()
+// ClearModals()
+    const currentForm = e.target.closest('form')
+    const currentModelName = currentForm.id.replace('form_id_', '')
+
+    if (formType === formTypes.ADD){    
+      addRow(dataTable, getFormData(), currentModelName)
+      document.removeEventListener('submit',submit)
+  } 
+    else if (formType === formTypes.EDIT){
+    const item_data=getFormData()    
+    editRow(dataTable,item_data , currentModelName)
+    document.removeEventListener('submit',submit)}}
+
+document.addEventListener('submit',submit)
+
+const getFormData = () => {
+    const data = {}
+    const myForm = document.querySelector('#form_id_{{ model_name }}')
+    
+    for (let i of myForm.elements) {
+
+      if (i.type === 'text' || i.type === 'date')
+      data[i.placeholder] = i.value;
+      // console.log(data)
+    }
+
+    return data;
+}
+
+// style
+// modelName
+let currentDataTB = getCurrentDataTable()
+currentDataTB.querySelector('.model-name').innerHTML = modelName
+currentDataTB.querySelector('.dataTable-top').className += ' d-flex justify-content-between'
+</script>
+

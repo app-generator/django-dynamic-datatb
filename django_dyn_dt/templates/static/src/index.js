@@ -1,12 +1,12 @@
-import {modelName, myData} from '../data/index.js'
-import {events} from './events/index.js'
+import { modelName, myData } from '../data/index.js'
+import { events } from './events/index.js'
 import {
     removeRow,
     addRow,
     editRow,
     search,
     columnsManage,
-    exportController, 
+    exportController,
     addController,
     middleContainer,
 } from './controller/index.js'
@@ -15,9 +15,9 @@ import { formConstructor, formTypes } from './form/index.js'
 let formType = formTypes.ADD
 
 // table
-const dataTable = new simpleDatatables.DataTable('table' , {
+const dataTable = new simpleDatatables.DataTable('table', {
     data: myData,
-    perPageSelect: [10,25,50],
+    perPageSelect: [10, 25, 50],
     perPage: parseInt(new URLSearchParams(window.location.search).get('entries')) || 10,
     labels: {
         placeholder: "Search...",
@@ -30,33 +30,35 @@ const dataTable = new simpleDatatables.DataTable('table' , {
 
 // edit & remove Button
 const newColumn = []
-myData.data.forEach((d,i) => {
+myData.data.forEach((d, i) => {
 
-    const editBtn = `<i class="btn-outline-primary edit bi bi-pencil-square" data-bs-toggle="modal" data-bs-target="#exampleModal"></i>`
-    
+    const editBtn = `<i class="btn-outline-primary edit bi bi-pencil-square"></i>`
+
     const removeBtn = `<i class="btn-outline-danger remove bi bi-eraser"></i>`
 
     newColumn.push(editBtn + " &nbsp; " + removeBtn)
 })
-        // add buttons
+// add buttons
 dataTable.columns().add({
     heading: '',
     data: newColumn
 })
-        // add funcs
+// add funcs
 dataTable.table.addEventListener('click', (e) => {
-    if (e.target.nodeName === 'I' ) {
+    if (e.target.nodeName === 'I') {
         const row = e.target.closest('tr');
+        const currentDatatb = e.target.closest('table')
+        const currentModelName = currentDatatb.id.replace('table_', '')
         if (e.target.className.includes('remove')) {
-            removeRow(dataTable,row.dataIndex)
+            removeRow(dataTable, row.dataIndex, currentModelName)
         }
         else if (e.target.className.includes('edit')) {
             const rowContent = [].slice.call(dataTable.data[row.dataIndex].cells).map((cell) => { return cell.textContent; });
             formType = formTypes.EDIT
-            formConstructor(formTypes.EDIT,rowContent)
+            formConstructor(formTypes.EDIT, rowContent)
         }
     }
-}) 
+})
 
 window.onload = () => {
     if (sessionStorage.getItem('register') == null)
@@ -70,7 +72,7 @@ window.onload = () => {
     })
 
     const els = document.getElementsByClassName('form-check-input')
-    Array.prototype.forEach.call(els, function(el) {
+    Array.prototype.forEach.call(els, function (el) {
         if (hideColumns.includes(el.id)) {
             el.checked = true
         }
@@ -95,10 +97,9 @@ exportController(dataTable)
 // Search Box
 search()
 
-document.addEventListener('submit',(e) => {
-
-    e.preventDefault();
-
+document.addEventListener('submit', (e) => {
+        // console.log(formType)
+    // e.preventDefault();
     if (formType === formTypes.ADD)
         addRow(dataTable, getFormData())
     else if (formType === formTypes.EDIT)

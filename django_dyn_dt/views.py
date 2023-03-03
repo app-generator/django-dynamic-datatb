@@ -1,18 +1,15 @@
-
 import os, json, math, random, string, base64
 
-from django.core.exceptions import ValidationError
 from django.db.models import Q
-from django.db.models.fields.related import RelatedField
 from django.http import HttpResponse
 from django.shortcuts import render
 
-# Create your views here.
 from django.views.decorators.csrf import csrf_exempt
 
 from .helpers import Utils
 
 from django.db.models.fields import DateField
+from django_dyn_dt.datatb import DataTB
 
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -27,40 +24,44 @@ try:
 except:
     pass
 
-# TODO: 404 for wrong page number
+
 def data_table_view(request, **kwargs):
-    try:
-        model_class = Utils.get_class(DYNAMIC_DATATB, kwargs.get('model_name'))
-    except KeyError:
-        return render(request, '404.html', status=404)
-    headings = _get_headings(model_class)
-    page_number = int(request.GET.get('page', 1))
-    search_key = request.GET.get('search', '')
-    entries = int(request.GET.get('entries', 10))
-
-    if page_number < 1:
-        return render(request, '404.html', status=404)
-
-    filter_options = Q()
-    for field in headings:
-        filter_options = filter_options | Q(**{field + '__icontains': search_key})
-    all_data = model_class.objects.filter(filter_options)
-    data = all_data[(page_number - 1) * entries:page_number * entries]
-    if all_data.count() != 0 and not 1 <= page_number <= math.ceil(all_data.count() / entries):
-        return render(request, '404.html', status=404)
+    # try:
+    #     model_class = Utils.get_class(DYNAMIC_DATATB, kwargs.get('model_name'))
+    # except KeyError:
+    #     return render(request, '404.html', status=404)
+    # headings = _get_headings(model_class)
+    # page_number = int(request.GET.get('page', 1))
+    # search_key = request.GET.get('search', '')
+    # entries = int(request.GET.get('entries', 10))
+    #
+    # if page_number < 1:
+    #     return render(request, '404.html', status=404)
+    #
+    # filter_options = Q()
+    # for field in headings:
+    #     filter_options = filter_options | Q(**{field + '__icontains': search_key})
+    # all_data = model_class.objects.filter(filter_options)
+    # data = all_data[(page_number - 1) * entries:page_number * entries]
+    # if all_data.count() != 0 and not 1 <= page_number <= math.ceil(all_data.count() / entries):
+    #     return render(request, '404.html', status=404)
+    # return render(request, 'index.html', context={
+    #     'model_name': kwargs.get('model_name'),
+    #     'headings': headings,
+    #     'data': [[getattr(record, heading) for heading in headings] for record in data],
+    #     'is_date': [True if type(field) == DateField else False for field in model_class._meta.get_fields()],
+    #     'total_pages': range(1, math.ceil(all_data.count() / entries) + 1),
+    #     'has_prev': False if page_number == 1 else (
+    #         True if all_data.count() != 0 else False),
+    #     'has_next': False if page_number == math.ceil(all_data.count() / entries) else (
+    #         True if all_data.count() != 0 else False),
+    #     'current_page': page_number,
+    #     'entries': entries,
+    #     'search': search_key,
+    # })
+    ddt = DataTB(model_class_path="django_dyn_dt.models.Book")
     return render(request, 'index.html', context={
-        'model_name': kwargs.get('model_name'),
-        'headings': headings,
-        'data': [[getattr(record, heading) for heading in headings] for record in data],
-        'is_date': [True if type(field) == DateField else False for field in model_class._meta.get_fields()],
-        'total_pages': range(1, math.ceil(all_data.count() / entries) + 1),
-        'has_prev': False if page_number == 1 else (
-            True if all_data.count() != 0 else False),
-        'has_next': False if page_number == math.ceil(all_data.count() / entries) else (
-            True if all_data.count() != 0 else False),
-        'current_page': page_number,
-        'entries': entries,
-        'search': search_key,
+        'data_table': ddt.render(),
     })
 
 
@@ -238,6 +239,7 @@ def _get_headings(model_class, filter_relations=True):
             continue
         headings.append(field.name)
     return headings
+
 
 def _is_relation_field(field):
     is_many_to_many_field = field.many_to_many is not None

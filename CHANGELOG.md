@@ -1,5 +1,10 @@
 # Change Log
 
+## [1.0.13] 2023-03-05
+### Changes
+
+- UI Fixes (widget mode)
+
 ## [1.0.12] 2023-03-04
 ### Changes
 

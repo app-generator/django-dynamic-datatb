@@ -34,3 +34,6 @@ img {
 img:hover {
     cursor: pointer;
 }
+.page-item{
+    cursor: pointer;
+}

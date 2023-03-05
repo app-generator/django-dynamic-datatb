@@ -1,6 +1,10 @@
+html{
+    overflow: scroll;
+}
 body {
     background-color: rgb(247, 247, 247);
     font-family: system-ui, -apple-system, "Segoe UI", Roboto;
+    overflow: scroll;
 }
 
 tr:hover {
@@ -28,5 +32,8 @@ img {
 }
 
 img:hover {
+    cursor: pointer;
+}
+.page-item{
     cursor: pointer;
 }

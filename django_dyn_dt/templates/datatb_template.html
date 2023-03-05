@@ -1,5 +1,5 @@
 {% load static %}
-<div id="data_table" >
+<div id="data_table" style="height: max-content;width: max-content;">
  <!-- data-tables -->
     <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" type="text/css">
     <script src="https://cdn.jsdelivr.net/npm/simple-datatables@3.2.0"               type="text/javascript"></script>
@@ -13,7 +13,7 @@
 
     <link rel="stylesheet" href="{% static 'src/style/myStyle.css' %}">
 
-    <div id="div_datatb_{{ model_name }}" class="d-flex flex-column mx-5" style="width:fit-content">
+    <div id="div_datatb_{{ model_name }}" class="d-flex flex-column " style="width:fit-content">
 
         <!-- page title -->
         <div class="header p-3 pb-0 item d-flex justify-content-between">
@@ -43,7 +43,7 @@
         {% endif %}
 
         {% if current_page|add:'-4' > 1 %}
-        <li class="page-item"><a class="page-link {{model_name}}" 
+        <li class="page-item" ><a class="page-link {{model_name}}" 
           
           >&hellip;</a></li>
       {% endif %}

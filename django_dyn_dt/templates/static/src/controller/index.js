@@ -142,13 +142,13 @@ export const search = (dataTable, submit) => {
     searchInput.setAttribute('placeholder', 'search...')
     searchInput.setAttribute('id', 'search')
     searchInput.setAttribute('type', 'text')
-    searchInput.setAttribute('style', 'width:auto; position:relative; left:-50px;')
+    searchInput.setAttribute('style', 'width:auto; position:relative; left:-75px;')
 
     const searchBtn = document.createElement('button')
     searchBtn.className = 'btn btn-primary'
     searchBtn.setAttribute('id', 'search-btn')
     searchBtn.innerHTML = '<i class="bi bi-search"></i>'
-    searchBtn.setAttribute('style', 'position:relative; left:-50px;')
+    searchBtn.setAttribute('style', 'position:relative; left:-75px;')
 
     searchContainer.appendChild(searchInput)
     searchContainer.appendChild(searchBtn)

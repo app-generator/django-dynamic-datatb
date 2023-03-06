@@ -207,10 +207,10 @@ const newColumn = []
 myData.data.forEach((d,i) => {
 
   let cell = '<div style="min-width: 100px;">'
-  const editBtn = `<i class="btn-outline-primary edit bi bi-pencil-square" data-bs-toggle="modal" data-bs-target="#exampleModal"></i>`
+  const editBtn = `<i style="cursor: pointer !important;" class="btn-outline-primary edit bi bi-pencil-square" data-bs-toggle="modal" data-bs-target="#exampleModal"></i>`
   cell += editBtn; 
   cell += ' &bull; ';
-  const removeBtn = `<i class="btn-outline-danger remove bi bi-eraser"></i>`
+  const removeBtn = `<i style="cursor: pointer !important;" class="btn-outline-danger remove bi bi-eraser"></i>`
   cell += removeBtn;
 
   //newColumn.push(editBtn + " &nbsp; " + removeBtn);

@@ -132,7 +132,7 @@ export class DataTable {
         Excelimg.src = '/static/src/images/excel.svg';
         div.appendChild(Excelimg)
         div.style.display = 'flex'
-        div.style.gap = 10
+        div.style.gap = '10px'
         footer.appendChild(div);
         // search 
         const SearchDiv = document.createElement('div')

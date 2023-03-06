@@ -70,7 +70,8 @@ td{
     height: 35px;
     display: block;
     border: none;
-    border-radius: 5px;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
 }
 /* #EditIcon{
     background:url('/static/src/images/edit.png');

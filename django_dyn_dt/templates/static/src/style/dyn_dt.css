@@ -43,3 +43,56 @@ img:hover {
 .page-item{
     cursor: pointer;
 }
+<<<<<<< HEAD:django_dyn_dt/templates/static/src/style/myStyle.css
+
+#my_data_table  {
+width: 100%;
+}
+
+#add_button{
+    cursor: pointer;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 15px;
+    padding-right: 15px;
+    border-radius: 5px;
+    color: white;
+    background-color: #0084ff;
+    border: none;
+
+}
+.page-item.disabled{
+    cursor: default;
+
+}
+td{
+    padding: 5px;
+}
+#search_button{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #0084ff;
+    width: 35px;
+    height: 35px;
+    display: block;
+    border: none;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+/* #EditIcon{
+    background:url('/static/src/images/edit.png');
+} */
+
+.littlebutton{
+    border: none;
+    background: none;
+    background-color: none;
+}
+
+.littleicons{
+    height: 16px;
+    width:  16px;
+}
+=======
+>>>>>>> main:django_dyn_dt/templates/static/src/style/dyn_dt.css

@@ -25,7 +25,9 @@
             <table id="table_{{ model_name }}" ></table>
         </div>
 
-
+        <div id="my_div_data_table" >
+            <table id="my_data_table" ></table>
+        </div>
 
     <!--Pagination-->
     <nav aria-label="Page navigation example">
@@ -153,6 +155,7 @@
 
     <script type="module">
 import {modelName, myData} from '{% static 'data/index.js' %}'
+import {DataTable} from '{% static 'data/DataTable.js' %}'
 import {events} from '{% static 'src/events/index.js' %}'
 import {
     GetNewData,
@@ -169,12 +172,13 @@ import {
 } from '{% static 'src/controller/index.js' %}'
 import { formConstructor, formTypes } from '{% static 'src/form/index.js' %}'
 
-
+let newDT=new DataTable([10,25,50],10,'{{ model_name }}',myData.data,myData.headings)
 
 let formType = formTypes.ADD
 window.onbeforeunload=()=>{
   sessionStorage.clear()
 }
+// console.log(myData)
 
 // console.log(window.location.search)
 // table
@@ -336,7 +340,7 @@ const getFormData = () => {
 }
 
 // style
-// modelName
+
 let currentDataTB = getCurrentDataTable()
 currentDataTB.querySelector('.model-name').innerHTML = modelName
 currentDataTB.querySelector('.dataTable-top').className += ' d-flex justify-content-between'

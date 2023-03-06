@@ -13,7 +13,6 @@ export function pageSelectController(dataTable, submit){
 
 
 export function functionSaveentry(dataTable) {
-
     let entry = $('.dataTable-selector').find(':selected').text()
     console.log(entry)
     if (entry != localStorage.getItem('entries')) {
@@ -56,7 +55,6 @@ export const GetNewData = async (datatablename) => {
         (result) => result.text()
     ).then(
         (data) => {
-            // console.log(data)
             $(`#div_datatb_${datatablename}`).html(data)
         }
     )

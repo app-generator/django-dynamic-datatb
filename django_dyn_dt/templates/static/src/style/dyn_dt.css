@@ -15,6 +15,12 @@ tr:hover {
     margin-bottom: 40px;
 }
 
+.bottomBorder {
+    border-bottom: 1px solid black;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+}
+
 div.datatable-top::after {
     display: none; !important;
 }
@@ -37,6 +43,7 @@ img:hover {
 .page-item{
     cursor: pointer;
 }
+<<<<<<< HEAD:django_dyn_dt/templates/static/src/style/myStyle.css
 
 #my_data_table  {
 width: 100%;
@@ -87,3 +94,5 @@ td{
     height: 16px;
     width:  16px;
 }
+=======
+>>>>>>> main:django_dyn_dt/templates/static/src/style/dyn_dt.css

@@ -19,7 +19,7 @@
     <!-- Icon -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.2/font/bootstrap-icons.css">
 
-    <link rel="stylesheet" href="{% static 'src/style/myStyle.css' %}">
+    <link rel="stylesheet" href="{% static 'src/style/dyn_dt.css' %}">
 
     <div id="div_datatb_{{ model_name }}" class="d-flex flex-column " style="flex-grow: 100;">
 
@@ -326,6 +326,6 @@ const getFormData = () => {
 // modelName
 let currentDataTB = getCurrentDataTable()
 currentDataTB.querySelector('.model-name').innerHTML = modelName
-currentDataTB.querySelector('.dataTable-top').className += ' d-flex justify-content-between'
+currentDataTB.querySelector('.dataTable-top').className += ' d-flex justify-content-between bottomBorder'
 </script>
 

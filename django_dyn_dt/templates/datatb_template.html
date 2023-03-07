@@ -47,6 +47,7 @@
         {% endfor %}
     ];
 
+
     setData(headings , data , isDate);
 
     setModelName(
@@ -74,11 +75,13 @@ import {modelName, myData} from '{% static 'data/index.js' %}'
 // } from '{% static 'src/controller/index.js' %}'
 // import { formConstructor, formTypes } from '{% static 'src/form/index.js' %}'
 // let hasnext=
+
 let newDT=new DataTable(
                           [10,25,50], // entries Items
                         parseInt(sessionStorage.getItem('entries')) || 10 // entry
                         ,'{{ model_name }}' // Data Table Title
-                        ,myData.data,myData.headings // headeings Of Columns
+                        ,myData.data
+                        ,myData.headings // headeings Of Columns
                         ,'{{current_page}}' // 
                         ,'{{total_pages}}'
                         ,'{{has_next}}'

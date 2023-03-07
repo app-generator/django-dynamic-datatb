@@ -58,23 +58,37 @@ export class DataTable {
         const divContent = document.createElement('div')
         divContent.className = 'modal-content';
 
-        let idLabel = document.createElement('p');
-        idLabel.id = 'ModalIdLabel'
-        idLabel.innerText = 'ID'
-        idLabel.style.fontWeight = 'bold'
-        divContent.appendChild(idLabel)
+        this.headings.forEach((Head) => {
+            let Label = document.createElement('p');
+            Label.id = `Modal_${Head}_Label`
+            Label.innerText = `${Head}`
+            Label.style.fontWeight = 'bold'
+            divContent.appendChild(Label)
+            if (Head.toLowerCase() !== 'id') {
+                const NameContent = document.createElement('input');
+                NameContent.type = 'text';
+                NameContent.id = `Modal_${Head}_Input`
+                // NameContent.onkeydown = (e) => { e.key == 'Enter' ? this.addHandler() : {} }
+                divContent.appendChild(NameContent)
+            }
+        }
+        )
+        // let idLabel = document.createElement('p');
+        // idLabel.id = 'ModalIdLabel'
+        // idLabel.style.fontWeight = 'bold'
+        // divContent.appendChild(idLabel)
 
-        let nameLabel = document.createElement('p');
-        nameLabel.innerText = 'Name'
-        nameLabel.style.fontWeight = 'bold'
-        nameLabel.style.marginBottom = 10
-        divContent.appendChild(nameLabel)
+        // let nameLabel = document.createElement('p');
+        // nameLabel.innerText = 'Name'
+        // nameLabel.style.fontWeight = 'bold'
+        // nameLabel.style.marginBottom = 10
+        // divContent.appendChild(nameLabel)
 
-        const NameContent = document.createElement('input');
-        NameContent.type = 'text';
-        NameContent.id = 'ModalInput'
-        // NameContent.onkeydown = (e) => { e.key == 'Enter' ? this.addHandler() : {} }
-        divContent.appendChild(NameContent)
+        // const NameContent = document.createElement('input');
+        // NameContent.type = 'text';
+        // NameContent.id = 'ModalInput'
+        // // NameContent.onkeydown = (e) => { e.key == 'Enter' ? this.addHandler() : {} }
+        // divContent.appendChild(NameContent)
 
         // div
         const buttonsDiv = document.createElement('div')
@@ -205,7 +219,7 @@ export class DataTable {
             // Edit            
             const EditButton = document.createElement('button');
             EditButton.className = 'littlebutton'
-            EditButton.onclick = (e) => { this.EditHandler(values[0], values[1]) }
+            EditButton.onclick = (e) => { this.EditHandler(values) }
             const EditIcon = document.createElement('img');
             EditIcon.className = 'littleicons'
             EditIcon.src = '/static/src/images/edit.png';
@@ -374,60 +388,80 @@ export class DataTable {
     }
     // Handler for Add Action 
     addHandler() {
-
-        const inputValue = document.getElementById('ModalInput').value
-        if (inputValue != '') {
-            let url = `/datatb/${this.Title}/`
-            let request = {
-                method: "POST",
-                body: JSON.stringify({
-                    name: inputValue
-                }),
+        const Request_body = {}
+        document.querySelector('.modal-content').childNodes.forEach(element => {
+            if (element.value) {
+                let value = element.value
+                let headname = element.id.split('_')[1]
+                Request_body[headname] = value
             }
-            this.#fetcher(url, request)
-            document.getElementById('ModalInput').value = '';
-            this.Modal.style.display = 'None';
+        })
+        let url = `/datatb/${this.Title}/`
+        let request = {
+            method: "POST",
+            body: JSON.stringify(Request_body),
         }
-
+        this.#fetcher(url, request)
+        this.Modal.style.display = 'None';
     }
     // Handler for Edit Action 
-    EditHandler(id, name) {
-        document.getElementById('ModalIdLabel').innerText = `ID : ${id}`
-        document.getElementById('ModalInput').value = name;
-        document.getElementById('ModalInput').onkeydown = (e) => { e.key == 'Enter' ? this.SendEdit() : {} }
+    EditHandler(values) {
         document.getElementById('SendButton').innerText = 'Edit';
-        document.getElementById('SendButton').onclick = (e) => this.SendEdit();
+        document.getElementById('SendButton').onclick = (e) => { this.SendEdit() };
+        let values_heading = values.map((e, i) => [e, this.headings[i]])
+        values_heading.forEach((valHea) => {
+            if (valHea[1] == 'id') {
+                document.getElementById('Modal_id_Label').innerText = `ID : ${valHea[0]}`
+            }
+            else {
+                document.getElementById(`Modal_${valHea[1]}_Input`).value = valHea[0]
+            }
+        })
+
         this.Modal.style.display = 'Block';
     }
-    // Reset Modal after each Action (Edit or Add) to default shape
     ResetModal() {
-        document.getElementById('ModalIdLabel').innerText = 'ID'
-        document.getElementById('ModalInput').value = '';
-        document.getElementById('SendButton').innerText = 'Add';
-        document.getElementById('SendButton').onclick = (e) => this.addHandler();
-        this.Modal.style.display = 'None';
-
-    }
-    //  Handle The Edit action
-    SendEdit() {
-        const id = document.getElementById('ModalIdLabel').innerText.match(/\d+/g)[0]
-        const inputValue = document.getElementById('ModalInput').value
-        if (inputValue != '') {
-            let url = `/datatb/${this.Title}/${id}/`
-            let request = {
-                method: "PUT",
-                body: JSON.stringify({
-                    id: id,
-                    name: inputValue
-                }),
+        // let values_heading = values.map((e, i) => [e, this.headings[i]])
+        this.headings.forEach((valHea) => {
+            if (valHea == 'id') {
+                document.getElementById('Modal_id_Label').innerText = `ID`
             }
-            this.ResetModal();
-            this.#fetcher(url, request)
-            // this.GetNewTable()
-        }
+            else {
+                document.getElementById(`Modal_${valHea}_Input`).value = ''
+            }
+            document.getElementById('SendButton').innerText = 'Add';
+            document.getElementById('SendButton').onclick = (e) => this.addHandler();
+            this.Modal.style.display = 'None';
 
-
+        })
     }
+    SendEdit() {
+        console.log(this.Title)
+        const Request_body = {}
+        let id
+        document.querySelector('.modal-content').childNodes.forEach(element => {
+            if (element.id.includes('id')) {
+                id = element.innerText.split(':')[1].replace(' ','')
+                Request_body['id'] = element.innerText.split(':')[1].replace(' ','')
+            }
+
+            if (element.value) {
+                let value = element.value
+                let headname = element.id.split('_')[1]
+                Request_body[headname] = value
+            }
+        })
+        console.log(Request_body)
+        let url = `/datatb/${this.Title}/${id}/`
+        let request = {
+            method: "PUT",
+            body: JSON.stringify(Request_body),
+        }
+        this.ResetModal();
+        this.#fetcher(url, request)
+        // this.GetNewTable()
+    }
+
 
     // Export the Table with the given Type Format
     ExportHandler(type) {
@@ -512,7 +546,7 @@ export class DataTable {
         localStorage.setItem(`entries`, entry)
         sessionStorage.setItem(`entries`, entry)
         this.GetNewTable()
-    
+
     }
 
 }

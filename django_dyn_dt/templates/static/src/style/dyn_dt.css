@@ -201,6 +201,7 @@ td{
   }
 #ButtonsDiv{
     margin-top: 15px;
+    padding-bottom: 10px;
     display: flex;
     justify-content: space-around;
 }

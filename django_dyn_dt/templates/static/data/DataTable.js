@@ -136,6 +136,7 @@ export class DataTable {
         })
 
         select.style.padding = 3
+
         Label.appendChild(select)
 
         let span = document.createElement('span')
@@ -494,6 +495,8 @@ export class DataTable {
         localStorage.setItem(`entries`, entry)
         sessionStorage.setItem(`entries`, entry)
         //TODO need to Fetch data
+        this.GetNewTable()
+
     }
 
 }

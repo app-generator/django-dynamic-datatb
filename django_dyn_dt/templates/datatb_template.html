@@ -2,8 +2,8 @@
 
 <!-- <div id="box" style="display: flex; border: 1px solid white; margin: 2px;"> -->
 
-  <div id="my_div_data_table" >
-    <table id="my_data_table" style="width: 100%;"></table>
+  <div id="div_data_table" >
+    <table id="data_table_{{model_name}}" style="width: 100%;"></table>
 </div>
 
 <!-- </div> -->
@@ -56,23 +56,23 @@
   </script>
 
   <script type="module">
+    import {DataTable} from '{% static 'data/DataTable.js' %}'
 import {modelName, myData} from '{% static 'data/index.js' %}'
-import {DataTable} from '{% static 'data/DataTable.js' %}'
-import {events} from '{% static 'src/events/index.js' %}'
-import {
-  GetNewData,
-  pageSelectController,
-  removeRow,
-  addRow,
-  editRow,
-  search,
-  columnsManage,
-  exportController,
-  addController,
-  middleContainer,
-  getCurrentDataTable,
-} from '{% static 'src/controller/index.js' %}'
-import { formConstructor, formTypes } from '{% static 'src/form/index.js' %}'
+// import {events} from '{% static 'src/events/index.js' %}'
+// import {
+//   GetNewData,
+//   pageSelectController,
+//   removeRow,
+//   addRow,
+//   editRow,
+//   search,
+//   columnsManage,
+//   exportController,
+//   addController,
+//   middleContainer,
+//   getCurrentDataTable,
+// } from '{% static 'src/controller/index.js' %}'
+// import { formConstructor, formTypes } from '{% static 'src/form/index.js' %}'
 // let hasnext=
 let newDT=new DataTable(
                           [10,25,50], // entries Items
@@ -83,7 +83,7 @@ let newDT=new DataTable(
                         ,'{{total_pages}}'
                         ,'{{has_next}}'
                         ,'{{has_prev}}')
-let formType = formTypes.ADD
+// let formType = formTypes.ADD
 window.onbeforeunload=()=>{
 sessionStorage.clear()
 }

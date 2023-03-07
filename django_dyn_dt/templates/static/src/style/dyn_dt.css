@@ -25,9 +25,9 @@ div.datatable-top::after {
     display: none; !important;
 }
 
-#modal-backdrop{
+/* #modal-backdrop{
     opacity: 0;
-}
+} */
 
 #search-container {
     width: 10%;
@@ -176,11 +176,13 @@ td{
   
   /* Modal Content/Box */
   .modal-content {
+    border-radius: 10px;
     background-color: #fefefe;
     margin: 15% auto; /* 15% from the top and centered */
-    padding: 35px;
+    padding-left: 15px;
+    padding-right: 15px;
     border: 1px solid #888;
-    width: 30%; /* Could be more or less, depending on screen size */
+    width: 20%; /* Could be more or less, depending on screen size */
   }
   
   /* The Close Button */
@@ -198,11 +200,13 @@ td{
     cursor: pointer;
   }
 #ButtonsDiv{
-    margin-top: 5px;
+    margin-top: 15px;
     display: flex;
     justify-content: space-around;
 }
 .modal-buttons{
+
+    padding: 5px;
     cursor: pointer;
     color: white;
     border-radius: 5px;

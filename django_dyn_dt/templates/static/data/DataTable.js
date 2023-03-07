@@ -7,12 +7,31 @@ export class DataTable {
     Modal;
     headings;
 
-    constructor(Perpage, entries, name, Data, headings, current_page, total_pages, has_next, has_prev) {
+
+    // constructor of the DataTalbe 
+    // Perpage => indicate how many items which Page should contain
+    // entry => Number of Items in a page
+    // Data => the Data of the table
+    // headings => Columns Headers
+    // current_page => a number to indicate the number of page
+    //  total_pages => this is a range of the pages : String 
+    // has_next => a string value that should convert to Boolean : for pagination
+    // has_prev => a string value that should convert to Boolean : for pagination
+    constructor(
+        Perpage
+        , entry
+        , name
+        , Data
+        , headings
+        , current_page
+        , total_pages
+        , has_next
+        , has_prev
+    ) {
         this.Perpage = Perpage
         this.Title = name
         this.Data = Data
-        this.entries = entries
-        this.element = document.getElementById(`my_data_table`);
+        this.element = document.getElementById(`data_table_${name}`);
         this.headings = headings
         // 
         let body = document.createElement('tbody');
@@ -22,7 +41,7 @@ export class DataTable {
         let footer = document.createElement('div');
         // 
         this.#createModal()
-        this.#setModelName(name, Perpage, entries, headings)
+        this.#setModelName(name, Perpage, entry, headings)
         this.element.appendChild(head)
         this.element.appendChild(body)
         this.#setFooter(footer);
@@ -30,6 +49,7 @@ export class DataTable {
 
     }
 
+    // this method creates a Modal for Add & Edit Actions
     #createModal() {
         this.Modal = document.createElement('div')
         this.Modal.id = 'myModal'
@@ -81,10 +101,11 @@ export class DataTable {
         this.Modal.appendChild(divContent)
         this.element.appendChild(this.Modal)
     }
+    // // to 
+    // #showToggle() {
+    //     document.getElementById('dropDownList').classList.toggle('show')
 
-    #showToggle() {
-        document.getElementById('dropDownList').classList.toggle('show')
-    }
+    // }
 
     #setModelName(name, PerpageItems, selected, headings) {
         // Title
@@ -99,7 +120,7 @@ export class DataTable {
         const Button = document.createElement('button');
         Button.innerText = 'Filter'
         Button.className = 'dropbtn'
-        Button.onclick = this.#showToggle
+        Button.onclick = (e) => document.getElementById('dropDownList').classList.toggle('show')
 
         DropDownDiv.appendChild(Button)
         const Columns = document.createElement('ul')
@@ -148,7 +169,7 @@ export class DataTable {
         div.style.display = 'flex'
         div.style.justifyContent = 'space-between'
         div.style.alignItems = 'center'
-        $('#my_div_data_table').prepend(div)
+        $('#div_data_table').prepend(div)
 
     }
     // set the name of columns and header of table  
@@ -179,8 +200,6 @@ export class DataTable {
                 tr.appendChild(td)
                 values.push(eachItem)
             })
-            // console.log(1)
-            // edit & remove buttons div
             const EditRemoveDiv = document.createElement('div')
             const td = document.createElement('td');
             // Edit            
@@ -213,6 +232,7 @@ export class DataTable {
         body.style.borderBottom = '0.5px solid lightgrey';
         return body
     }
+    // create a footer for Add , Export Buttons and Search Textfield
     #setFooter(footer) {
         // add button
         const AddButton = document.createElement('button');
@@ -269,12 +289,13 @@ export class DataTable {
 
         footer.style.margin = 10;
         footer.style.justifyContent = 'space-between';
-        $('#my_div_data_table').append(footer)
+        $('#div_data_table').append(footer)
     }
+
+    // Creat NavBar under the footer and attach it to teh DIV container
     #setNavigation(total_pages, current_page, has_next, has_prev) {
         let has_pr = has_prev === 'true'
         let has_nex = has_next === 'true'
-        console.log(has_next)
         const nav = document.createElement('nav');
         const PreviousPage = document.createElement('li');
         let button = document.createElement('button')
@@ -290,8 +311,7 @@ export class DataTable {
         nav.appendChild(PreviousPage)
         // 
         let NumberOfPages = total_pages.match(/\d/g)[1]
-        // console.log(page)
-        console.log(NumberOfPages)
+
         for (let i = 1; i < NumberOfPages; i++) {
             const Page = document.createElement('li');
             let button = document.createElement('button')
@@ -320,9 +340,9 @@ export class DataTable {
         PriorPage.appendChild(button)
         nav.appendChild(PriorPage)
         nav.className = 'Pagination-Nav'
-        $('#my_div_data_table').append(nav)
+        $('#div_data_table').append(nav)
     }
-
+    // this method fetch the data by using fetch method 
     async  #fetcher(url, request) {
         await fetch(url, request)
             .then(
@@ -338,26 +358,24 @@ export class DataTable {
         this.GetNewTable()
 
     }
-
+    // Navigation Handler
     Navigatior(page) {
-        localStorage.setItem('page',page);
+        localStorage.setItem('page', page);
         this.GetNewTable()
-     }
-
+    }
+    // Filter the Hide Columns for EXPORT
     FilterHandler(id) {
         let column = id.split('_')[1]
-        console.log(column)
         let hideColumns = JSON.parse(localStorage.getItem('hideColumns')) || []
 
         const ToggleColumn = (array, val) => array.includes(val) ? array.filter(el => el !== val) : [...array, val]
         hideColumns = ToggleColumn(hideColumns, column)
         localStorage.setItem('hideColumns', JSON.stringify(hideColumns))
     }
-
-    //TODO 
+    // Handler for Add Action 
     addHandler() {
+
         const inputValue = document.getElementById('ModalInput').value
-        console.log()
         if (inputValue != '') {
             let url = `/datatb/${this.Title}/`
             let request = {
@@ -370,11 +388,10 @@ export class DataTable {
             document.getElementById('ModalInput').value = '';
             this.Modal.style.display = 'None';
         }
-    }
 
-    //TODO
+    }
+    // Handler for Edit Action 
     EditHandler(id, name) {
-        // console.log(id)
         document.getElementById('ModalIdLabel').innerText = `ID : ${id}`
         document.getElementById('ModalInput').value = name;
         document.getElementById('ModalInput').onkeydown = (e) => { e.key == 'Enter' ? this.SendEdit() : {} }
@@ -382,23 +399,21 @@ export class DataTable {
         document.getElementById('SendButton').onclick = (e) => this.SendEdit();
         this.Modal.style.display = 'Block';
     }
-
+    // Reset Modal after each Action (Edit or Add) to default shape
     ResetModal() {
         document.getElementById('ModalIdLabel').innerText = 'ID'
         document.getElementById('ModalInput').value = '';
         document.getElementById('SendButton').innerText = 'Add';
         document.getElementById('SendButton').onclick = (e) => this.addHandler();
         this.Modal.style.display = 'None';
-    }
 
+    }
+    //  Handle The Edit action
     SendEdit() {
-        console.log(this.Title)
         const id = document.getElementById('ModalIdLabel').innerText.match(/\d+/g)[0]
         const inputValue = document.getElementById('ModalInput').value
-        console.log(id)
         if (inputValue != '') {
             let url = `/datatb/${this.Title}/${id}/`
-            console.log(url)
             let request = {
                 method: "PUT",
                 body: JSON.stringify({
@@ -410,8 +425,11 @@ export class DataTable {
             this.#fetcher(url, request)
             // this.GetNewTable()
         }
+
+
     }
 
+    // Export the Table with the given Type Format
     ExportHandler(type) {
         const searchParam = sessionStorage.getItem('searchValue') || ''
         const hiddenColumns = localStorage.getItem('hideColumns')
@@ -441,9 +459,11 @@ export class DataTable {
             .catch((err) => {
                 console.log(err.toString())
             });
+
+        localStorage.clear()
     }
 
-    //TODO
+    //  Remove a row
     RemoveHnadler(id) {
         let url = `/datatb/${this.Title}/${id}/`
         let request = {
@@ -452,11 +472,11 @@ export class DataTable {
         this.#fetcher(url, request);
         // this.GetNewTable()
     }
+    // this method Get the new Table from Server and replace it with old one
     async GetNewTable() {
         const search = localStorage.getItem('searchValue') || '';
         const perpage = localStorage.getItem('entries') || 10;
         const page = localStorage.getItem('page') || 1;
-
         const searchParams = new URLSearchParams({
             search: search,
             entries: perpage,
@@ -471,32 +491,28 @@ export class DataTable {
             (result) => result.text()
         ).then(
             (data) => {
-                $(`#my_div_data_table`).html(data)
+                $(`#div_data_table`).html(data)
             }
         )
     }
 
-    //TODO
+    //  save the Search value 
     SearchHandler() {
-        console.log('zarp')
         const searchValue = document.getElementById('SearchInput').value
         sessionStorage.setItem('searchValue', searchValue)
         localStorage.setItem('searchValue', searchValue)
-        //TODO need to Fetch data
         this.GetNewTable()
+    }
 
-    }
-    //TODO
-    ReplaceNewTable() {
-    }
+    //  save the choosen Entry value 
+
     EntryHandler(entry) {
         localStorage.setItem(`${this.Title}_entries`, entry)
         sessionStorage.setItem(`${this.Title}_entries`, entry)
         localStorage.setItem(`entries`, entry)
         sessionStorage.setItem(`entries`, entry)
-        //TODO need to Fetch data
         this.GetNewTable()
-
+    
     }
 
 }

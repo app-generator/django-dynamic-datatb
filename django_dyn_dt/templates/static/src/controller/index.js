@@ -1,8 +1,8 @@
 import { modelName, myData } from "../../data/index.js";
 import { formConstructor, formTypes } from "../form/index.js";
 
-const toastLive = document.getElementById('liveToast')
-const toast = new bootstrap.Toast(toastLive)
+// const toastLive = document.getElementById('liveToast')
+// const toast = new bootstrap.Toast(toastLive)
 
 export function pageSelectController(dataTable, submit){
     document.querySelector('.dataTable-selector').addEventListener('click',()=>{

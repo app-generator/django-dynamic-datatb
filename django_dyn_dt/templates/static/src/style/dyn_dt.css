@@ -48,7 +48,7 @@ img:hover {
 width: 100%;
 }
 
-#add_button{
+.add-button{
     cursor: pointer;
     padding-top: 10px;
     padding-bottom: 10px;
@@ -127,13 +127,14 @@ td{
     padding: 12px 16px;
     text-decoration: none;
     display: block;
+    list-style-type: none;
   }
   
   .dropdown a:hover {background-color: #ddd;}
-
+/* 
   #dropDownList{
-    list-style-type: none;
-  }
+    
+  } */
   .page-link{
     color: black;
     padding: 10px;
@@ -152,7 +153,7 @@ td{
 .Pagination-Nav{
     margin-top: 35px;
     padding-left: 5px;
-    padding-right: 5px;
+    padding-right: 40px;
     list-style-type: none;
     display: flex;
     justify-content: center;

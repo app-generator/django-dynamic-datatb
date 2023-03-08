@@ -1,4 +1,5 @@
-export class DataTable {
+export class DataTable {    
+
     Perpage;
     Title;
     Data;
@@ -33,6 +34,7 @@ export class DataTable {
         this.Data = Data
         this.element = document.getElementById(`data_table_${name}`);
         this.headings = headings
+        this.ParentElement=`#div_data_table_${this.Title}`
         // 
         let body = document.createElement('tbody');
         body = this.#setBody(body, Data)
@@ -52,22 +54,22 @@ export class DataTable {
     // this method creates a Modal for Add & Edit Actions
     #createModal() {
         this.Modal = document.createElement('div')
-        this.Modal.id = 'myModal'
+        this.Modal.id = `myModal_${this.Title}`
         this.Modal.className = 'modal'
         //  div
         const divContent = document.createElement('div')
-        divContent.className = 'modal-content';
+        divContent.className = `modal-content ${this.Title}`;
 
         this.headings.forEach((Head) => {
             let Label = document.createElement('p');
-            Label.id = `Modal_${Head}_Label`
+            Label.id = `Modal_${this.Title}_${Head}_Label`
             Label.innerText = `${Head}`
             Label.style.fontWeight = 'bold'
             divContent.appendChild(Label)
             if (Head.toLowerCase() !== 'id') {
                 const NameContent = document.createElement('input');
                 NameContent.type = 'text';
-                NameContent.id = `Modal_${Head}_Input`
+                NameContent.id = `Modal_${this.Title}_${Head}_Input`
                 // NameContent.onkeydown = (e) => { e.key == 'Enter' ? this.addHandler() : {} }
                 divContent.appendChild(NameContent)
             }
@@ -98,13 +100,13 @@ export class DataTable {
         closeButton.innerText = 'Close'
         closeButton.className = 'modal-buttons'
         closeButton.style.backgroundColor = 'crimson'
-        closeButton.onclick = () => this.Modal.style.display = 'None'
+        closeButton.onclick = (e) => {this.Modal.style.display = 'None'; this.ResetModal()}
 
         buttonsDiv.appendChild(closeButton)
 
         //button
         const SendButton = document.createElement('button')
-        SendButton.id = 'SendButton'
+        SendButton.id = `SendButton_${this.Title}`
         SendButton.innerText = 'Add'
         SendButton.className = 'modal-buttons'
         SendButton.onclick = (e) => this.addHandler(); // Send Button handler
@@ -133,12 +135,12 @@ export class DataTable {
 
         const Button = document.createElement('button');
         Button.innerText = 'Filter'
-        Button.className = 'dropbtn'
-        Button.onclick = (e) => document.getElementById('dropDownList').classList.toggle('show')
+        Button.className = `dropbtn ${this.Title}`
+        Button.onclick = (e) => document.getElementById(`dropDownList_${this.Title}`).classList.toggle('show')
 
         DropDownDiv.appendChild(Button)
         const Columns = document.createElement('ul')
-        Columns.id = 'dropDownList'
+        Columns.id = `dropDownList_${this.Title}`
         Columns.onchange = (e) => {
             this.FilterHandler(e.target.id);
         }
@@ -183,7 +185,7 @@ export class DataTable {
         div.style.display = 'flex'
         div.style.justifyContent = 'space-between'
         div.style.alignItems = 'center'
-        $('#div_data_table').prepend(div)
+        $(this.ParentElement).prepend(div)
 
     }
     // set the name of columns and header of table  
@@ -194,6 +196,8 @@ export class DataTable {
             th.innerText = element
             tr.appendChild(th)
         });
+        
+        tr.style.textAlign='justify'
         // additional column for edit and remove 
         const th = document.createElement('th');
         tr.appendChild(th)
@@ -253,7 +257,8 @@ export class DataTable {
         // add button
         const AddButton = document.createElement('button');
         AddButton.innerText = '+';
-        AddButton.id = 'add_button'
+        AddButton.id = `add_button_${this.Title}`
+        AddButton.className=`add-button ${this.Title}`
         AddButton.onclick = () => this.Modal.style.display = 'Block';
         footer.appendChild(AddButton);
         footer.style.display = 'flex'
@@ -280,6 +285,7 @@ export class DataTable {
         div.appendChild(Excelimg)
         div.style.display = 'flex'
         div.style.gap = '10px'
+        div.style.marginLeft=135
         footer.appendChild(div);
         // search 
         const SearchDiv = document.createElement('div')
@@ -305,7 +311,7 @@ export class DataTable {
 
         footer.style.margin = 10;
         footer.style.justifyContent = 'space-between';
-        $('#div_data_table').append(footer)
+        $(this.ParentElement).append(footer)
     }
 
     // Creat NavBar under the footer and attach it to teh DIV container
@@ -332,6 +338,7 @@ export class DataTable {
             const Page = document.createElement('li');
             let button = document.createElement('button')
             button.innerText = i
+
             if (i == current_page) {
                 button.className = 'page-link current'
             }
@@ -356,7 +363,7 @@ export class DataTable {
         PriorPage.appendChild(button)
         nav.appendChild(PriorPage)
         nav.className = 'Pagination-Nav'
-        $('#div_data_table').append(nav)
+        $(this.ParentElement).append(nav)
     }
     // this method fetch the data by using fetch method 
     async  #fetcher(url, request) {
@@ -376,25 +383,24 @@ export class DataTable {
     }
     // Navigation Handler
     Navigatior(page) {
-        localStorage.setItem('page', page);
+        localStorage.setItem(`page_${this.Title}`, page);
         this.GetNewTable()
     }
     // Filter the Hide Columns for EXPORT
     FilterHandler(id) {
         let column = id.split('_')[1]
-        let hideColumns = JSON.parse(localStorage.getItem('hideColumns')) || []
-
+        let hideColumns = JSON.parse(localStorage.getItem(`hideColumns_${this.Title}`)) || []
         const ToggleColumn = (array, val) => array.includes(val) ? array.filter(el => el !== val) : [...array, val]
         hideColumns = ToggleColumn(hideColumns, column)
-        localStorage.setItem('hideColumns', JSON.stringify(hideColumns))
+        localStorage.setItem(`hideColumns_${this.Title}`, JSON.stringify(hideColumns))
     }
     // Handler for Add Action 
     addHandler() {
         const Request_body = {}
-        document.querySelector('.modal-content').childNodes.forEach(element => {
+        document.querySelector(`.modal-content.${this.Title}`).childNodes.forEach(element => {
             if (element.value) {
                 let value = element.value
-                let headname = element.id.split('_')[1]
+                let headname = element.id.split('_')[2]
                 Request_body[headname] = value
             }
         })
@@ -408,15 +414,19 @@ export class DataTable {
     }
     // Handler for Edit Action 
     EditHandler(values) {
-        document.getElementById('SendButton').innerText = 'Edit';
-        document.getElementById('SendButton').onclick = (e) => { this.SendEdit() };
+        // console.log(values)
+        // console.log(`SendButton_${this.Title}`)
+
+        document.getElementById(`SendButton_${this.Title}`).innerText = 'Edit';
+
+        document.getElementById(`SendButton_${this.Title}`).onclick = (e) => { this.SendEdit() };
         let values_heading = values.map((e, i) => [e, this.headings[i]])
         values_heading.forEach((valHea) => {
             if (valHea[1] == 'id') {
-                document.getElementById('Modal_id_Label').innerText = `ID : ${valHea[0]}`
+                document.getElementById(`Modal_${this.Title}_id_Label`).innerText = `ID : ${valHea[0]}`
             }
             else {
-                document.getElementById(`Modal_${valHea[1]}_Input`).value = valHea[0]
+                document.getElementById(`Modal_${this.Title}_${valHea[1]}_Input`).value = valHea[0]
             }
         })
 
@@ -425,35 +435,36 @@ export class DataTable {
     ResetModal() {
         // let values_heading = values.map((e, i) => [e, this.headings[i]])
         this.headings.forEach((valHea) => {
+
             if (valHea == 'id') {
-                document.getElementById('Modal_id_Label').innerText = `ID`
+                document.getElementById(`Modal_${this.Title}_id_Label`).innerText = `ID`
             }
             else {
-                document.getElementById(`Modal_${valHea}_Input`).value = ''
+                document.getElementById(`Modal_${this.Title}_${valHea}_Input`).value = ''
             }
-            document.getElementById('SendButton').innerText = 'Add';
-            document.getElementById('SendButton').onclick = (e) => this.addHandler();
+            document.getElementById(`SendButton_${this.Title}`).innerText = 'Add';
+            document.getElementById(`SendButton_${this.Title}`).onclick = (e) => this.addHandler();
             this.Modal.style.display = 'None';
 
         })
     }
     SendEdit() {
-        console.log(this.Title)
+        // console.log(this.Title)
         const Request_body = {}
         let id
-        document.querySelector('.modal-content').childNodes.forEach(element => {
+        document.querySelector(`.modal-content.${this.Title}` ).childNodes.forEach(element => {
             if (element.id.includes('id')) {
                 id = element.innerText.split(':')[1].replace(' ','')
-                Request_body['id'] = element.innerText.split(':')[1].replace(' ','')
+                Request_body['id'] = id
             }
 
             if (element.value) {
                 let value = element.value
-                let headname = element.id.split('_')[1]
+                let headname = element.id.split('_')[2]
                 Request_body[headname] = value
             }
         })
-        console.log(Request_body)
+        // console.log(Request_body)
         let url = `/datatb/${this.Title}/${id}/`
         let request = {
             method: "PUT",
@@ -463,8 +474,6 @@ export class DataTable {
         this.#fetcher(url, request)
         // this.GetNewTable()
     }
-
-
     // Export the Table with the given Type Format
     ExportHandler(type) {
         const searchParam = sessionStorage.getItem('searchValue') || ''
@@ -508,17 +517,30 @@ export class DataTable {
         this.#fetcher(url, request);
         // this.GetNewTable()
     }
+    ClearStorage(){
+        let arr = []; // Array to hold the keys
+        for (let i = 0; i < localStorage.length; i++){
+            if (localStorage.key(i).includes(this.Title)) {
+                arr.push(localStorage.key(i));
+            }
+        }
+                // Iterate over arr and remove the items by key
+        for (let i = 0; i < arr.length; i++) {
+            localStorage.removeItem(arr[i]);
+        }
+    }
     // this method Get the new Table from Server and replace it with old one
     async GetNewTable() {
-        const search = localStorage.getItem('searchValue') || '';
-        const perpage = localStorage.getItem('entries') || 10;
-        const page = localStorage.getItem('page') || 1;
+        const search = localStorage.getItem(`searchValue_${this.Title}`) || '';
+        const perpage = sessionStorage.getItem(`entries_${this.Title}`) || 10;
+        const page = localStorage.getItem(`page_${this.Title}`) || 1;
         const searchParams = new URLSearchParams({
             search: search,
             entries: perpage,
             page: page
         })
-        localStorage.clear()
+
+        this.ClearStorage()
         await fetch(`/datatb/${this.Title}?${searchParams}`, {
             method: 'GET'
         }).then(
@@ -527,7 +549,7 @@ export class DataTable {
             (result) => result.text()
         ).then(
             (data) => {
-                $(`#div_data_table`).html(data)
+                $(this.ParentElement).html(data)
             }
         )
     }
@@ -535,18 +557,17 @@ export class DataTable {
     //  save the Search value 
     SearchHandler() {
         const searchValue = document.getElementById('SearchInput').value
-        sessionStorage.setItem('searchValue', searchValue)
-        localStorage.setItem('searchValue', searchValue)
+        sessionStorage.setItem(`searchValue_${this.Title}`, searchValue)
+        localStorage.setItem(`searchValue_${this.Title}`, searchValue)
         this.GetNewTable()
     }
 
     //  save the choosen Entry value 
-
     EntryHandler(entry) {
-        localStorage.setItem(`${this.Title}_entries`, entry)
-        sessionStorage.setItem(`${this.Title}_entries`, entry)
-        localStorage.setItem(`entries`, entry)
-        sessionStorage.setItem(`entries`, entry)
+        localStorage.setItem(`entries_${this.Title}`, entry)
+        sessionStorage.setItem(`entries_${this.Title}`, entry)
+        // localStorage.setItem(`entries`, entry)
+        // sessionStorage.setItem(`entries`, entry)
         this.GetNewTable()
 
     }

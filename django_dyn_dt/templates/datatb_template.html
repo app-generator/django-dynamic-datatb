@@ -2,7 +2,7 @@
 
 <!-- <div id="box" style="display: flex; border: 1px solid white; margin: 2px;"> -->
 
-  <div id="div_data_table" >
+  <div id="div_data_table_{{model_name}}" >
     <table id="data_table_{{model_name}}" style="width: 100%;"></table>
 </div>
 
@@ -78,7 +78,7 @@ import {modelName, myData} from '{% static 'data/index.js' %}'
 
 let newDT=new DataTable(
                           [10,25,50], // entries Items
-                        parseInt(sessionStorage.getItem('entries')) || 10 // entry
+                        parseInt(sessionStorage.getItem('entries_{{ model_name }}')) || 10 // entry
                         ,'{{ model_name }}' // Data Table Title
                         ,myData.data
                         ,myData.headings // headeings Of Columns

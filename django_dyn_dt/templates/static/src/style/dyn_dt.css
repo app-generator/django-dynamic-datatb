@@ -183,7 +183,7 @@ td{
     padding-left: 15px;
     padding-right: 15px;
     border: 1px solid #888;
-    width: 20%; /* Could be more or less, depending on screen size */
+    width: 15%; /* Could be more or less, depending on screen size */
   }
   
   /* The Close Button */
@@ -204,7 +204,8 @@ td{
     margin-top: 15px;
     padding-bottom: 10px;
     display: flex;
-    justify-content: space-around;
+    /* justify-content: space-around; */
+    gap:15px;
 }
 .modal-buttons{
 

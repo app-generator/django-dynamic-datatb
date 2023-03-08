@@ -65,6 +65,7 @@ export class DataTable {
             Label.id = `Modal_${this.Title}_${Head}_Label`
             Label.innerText = `${Head}`
             Label.style.fontWeight = 'bold'
+            Label.style.marginBottom=5
             divContent.appendChild(Label)
             if (Head.toLowerCase() !== 'id') {
                 const NameContent = document.createElement('input');
@@ -75,23 +76,6 @@ export class DataTable {
             }
         }
         )
-        // let idLabel = document.createElement('p');
-        // idLabel.id = 'ModalIdLabel'
-        // idLabel.style.fontWeight = 'bold'
-        // divContent.appendChild(idLabel)
-
-        // let nameLabel = document.createElement('p');
-        // nameLabel.innerText = 'Name'
-        // nameLabel.style.fontWeight = 'bold'
-        // nameLabel.style.marginBottom = 10
-        // divContent.appendChild(nameLabel)
-
-        // const NameContent = document.createElement('input');
-        // NameContent.type = 'text';
-        // NameContent.id = 'ModalInput'
-        // // NameContent.onkeydown = (e) => { e.key == 'Enter' ? this.addHandler() : {} }
-        // divContent.appendChild(NameContent)
-
         // div
         const buttonsDiv = document.createElement('div')
         buttonsDiv.id = 'ButtonsDiv'

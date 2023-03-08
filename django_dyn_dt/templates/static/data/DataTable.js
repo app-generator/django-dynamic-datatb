@@ -1,4 +1,4 @@
-export class DataTable {    
+export class DataTable {
 
     Perpage;
     Title;
@@ -34,7 +34,9 @@ export class DataTable {
         this.Data = Data
         this.element = document.getElementById(`data_table_${name}`);
         this.headings = headings
-        this.ParentElement=`#div_data_table_${this.Title}`
+        this.ParentElement = `#div_data_table_${this.Title}`
+        localStorage.setItem(`page_${this.Title}`, current_page)
+
         // 
         let body = document.createElement('tbody');
         body = this.#setBody(body, Data)
@@ -65,7 +67,7 @@ export class DataTable {
             Label.id = `Modal_${this.Title}_${Head}_Label`
             Label.innerText = `${Head}`
             Label.style.fontWeight = 'bold'
-            Label.style.marginBottom=5
+            Label.style.marginBottom = 5
             divContent.appendChild(Label)
             if (Head.toLowerCase() !== 'id') {
                 const NameContent = document.createElement('input');
@@ -84,7 +86,7 @@ export class DataTable {
         closeButton.innerText = 'Close'
         closeButton.className = 'modal-buttons'
         closeButton.style.backgroundColor = 'crimson'
-        closeButton.onclick = (e) => {this.Modal.style.display = 'None'; this.ResetModal()}
+        closeButton.onclick = (e) => { this.Modal.style.display = 'None'; this.ResetModal() }
 
         buttonsDiv.appendChild(closeButton)
 
@@ -180,8 +182,8 @@ export class DataTable {
             th.innerText = element
             tr.appendChild(th)
         });
-        
-        tr.style.textAlign='justify'
+
+        tr.style.textAlign = 'justify'
         // additional column for edit and remove 
         const th = document.createElement('th');
         tr.appendChild(th)
@@ -242,7 +244,7 @@ export class DataTable {
         const AddButton = document.createElement('button');
         AddButton.innerText = '+';
         AddButton.id = `add_button_${this.Title}`
-        AddButton.className=`add-button ${this.Title}`
+        AddButton.className = `add-button ${this.Title}`
         AddButton.onclick = () => this.Modal.style.display = 'Block';
         footer.appendChild(AddButton);
         footer.style.display = 'flex'
@@ -269,7 +271,7 @@ export class DataTable {
         div.appendChild(Excelimg)
         div.style.display = 'flex'
         div.style.gap = '10px'
-        div.style.marginLeft=135
+        div.style.marginLeft = 135
         footer.appendChild(div);
         // search 
         const SearchDiv = document.createElement('div')
@@ -353,10 +355,10 @@ export class DataTable {
     async  #fetcher(url, request) {
         await fetch(url, request)
             .then(
-                response => response.json
+                response => response.json()
             ).then(
                 (result) => {
-                    if (result.status != 200) {
+                    if (!result.success) {
                         console.log(result.text)
                     }
                 }
@@ -436,9 +438,9 @@ export class DataTable {
         // console.log(this.Title)
         const Request_body = {}
         let id
-        document.querySelector(`.modal-content.${this.Title}` ).childNodes.forEach(element => {
+        document.querySelector(`.modal-content.${this.Title}`).childNodes.forEach(element => {
             if (element.id.includes('id')) {
-                id = element.innerText.split(':')[1].replace(' ','')
+                id = element.innerText.split(':')[1].replace(' ', '')
                 Request_body['id'] = id
             }
 
@@ -460,8 +462,8 @@ export class DataTable {
     }
     // Export the Table with the given Type Format
     ExportHandler(type) {
-        const searchParam = sessionStorage.getItem('searchValue') || ''
-        const hiddenColumns = localStorage.getItem('hideColumns')
+        const searchParam = sessionStorage.getItem(`searchValue_${this.Title}`) || ''
+        const hiddenColumns = localStorage.getItem(`hideColumns_${this.Title}`)
         let url = `/datatb/${this.Title}/export/`
         let request = {
             method: 'POST',
@@ -469,7 +471,9 @@ export class DataTable {
                 search: searchParam,
                 hidden_cols: hiddenColumns,
                 type: type === 'excel' ? 'xlsx' : type
+
             })
+
         }
         fetch(url, request)
             .then((response) => {
@@ -501,14 +505,16 @@ export class DataTable {
         this.#fetcher(url, request);
         // this.GetNewTable()
     }
-    ClearStorage(){
+    ClearStorage() {
+        let re = new RegExp(`${this.Title}$.*`)
         let arr = []; // Array to hold the keys
-        for (let i = 0; i < localStorage.length; i++){
-            if (localStorage.key(i).includes(this.Title)) {
+        for (let i = 0; i < localStorage.length; i++) {
+            if (localStorage.key(i).match(re)) {
                 arr.push(localStorage.key(i));
             }
+
         }
-                // Iterate over arr and remove the items by key
+        // Iterate over arr and remove the items by key
         for (let i = 0; i < arr.length; i++) {
             localStorage.removeItem(arr[i]);
         }

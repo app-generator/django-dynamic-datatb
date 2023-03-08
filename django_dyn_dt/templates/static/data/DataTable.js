@@ -235,10 +235,12 @@ export class DataTable {
             RemoveIcon.className = 'littleicons'
             RemoveIcon.src = '/static/src/images/remove.png';
 
-            RemoveButton.appendChild(RemoveIcon)
+            RemoveButton.appendChild(RemoveIcon);
             EditRemoveDiv.appendChild(RemoveButton);
-            EditRemoveDiv.style.display = 'flex'
-            EditRemoveDiv.style.gap = '5px'
+            EditRemoveDiv.style.display = 'flex';
+            EditRemoveDiv.style.gap = '5px';
+            EditRemoveDiv.style.cssText += 'justify-content: flex-end;';
+
             td.appendChild(EditRemoveDiv)
             tr.appendChild(td);
             body.appendChild(tr);

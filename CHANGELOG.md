@@ -1,5 +1,10 @@
 # Change Log
 
+## [1.0.21] 2023-03-08
+### Changes
+
+- Update DOCS (readme)
+
 ## [1.0.20] 2023-03-08
 ### Changes
 

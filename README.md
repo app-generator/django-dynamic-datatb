@@ -59,12 +59,12 @@ INSTALLED_APPS = [
 
 ```python
 
-TEMPLATE_DIR_DATATB = os.path.join(BASE_DIR, "django_dyn_dt/templates") # <-- NEW App
+DATATB_TEMPLATES = os.path.join(BASE_DIR, "django_dyn_dt/templates")   # <-- NEW Templates Include
 
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [TEMPLATE_DIR_DATATB],                                  # <-- NEW Include
+        "DIRS": [DATATB_TEMPLATES],                                    # <-- NEW Include
         "APP_DIRS": True,
         "OPTIONS": {
         },
@@ -86,39 +86,42 @@ STATICFILES_DIRS = (
 
 <br />
 
-> **Step #6** - `Register the model` in `settings.py` (DYNAMIC_DATATB section)
 
-This sample code assumes that `app1` exists and model `Book` is defined and migrated.
-
-```python
-
-DYNAMIC_DATATB = {
-    # SLUG -> Import_PATH 
-    'books'  : "app1.models.Book",
-}
-
-```
-
-<br />
-
-
-> **Step #7** - `Update routing`, include APIs 
+> **Step #6** - `Update routing`, include APIs 
 
 ```python
 from django.contrib import admin
-from django.urls import path, include         # <-- NEW: 'include` directive added
+from django.urls import path, include                 # <-- NEW: 'include` directive added
+from django.views.decorators.csrf import csrf_exempt  # <-- NEW: csrf_exempt required 
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path('', include('django_dyn_dt.urls')),  # <-- NEW: API routing rules
+
+    path('datatb/<str:model_name>/<int:pk>/', csrf_exempt(DataTB.as_view())),  # <-- NEW: (Used by Dynamic DataTables)
+    path('datatb/<str:model_name>/'         , csrf_exempt(DataTB.as_view())),  # <-- NEW: (Used by Dynamic DataTables)
+    path('datatb/<str:model_name>/export/'  , csrf_exempt(export)),            # <-- NEW: (Used by Dynamic DataTables)
+
 ]    
 ```    
 
 <br />
 
-> **Step #8** - Use the Dynamic Datatable module 
+> **Step #7** - Use the Dynamic Datatable widget in controller
 
-If the managed model is `Books`, the dynamic interface is `/datatb/books/` and all features available. 
+```python
+
+from django_dyn_dt.datatb import DataTB
+
+def dyn_datatb(request):
+
+    context = {} 
+        
+    ddt = DataTB(model_class_path="home.models.Product")  # Link Dynamic view to a Model (full path)
+    context['data_table1'] = ddt.render()                 # Render() returns the dynamic widget
+
+    return render(request, 'pages/dyn-datatb.html', context=context)
+
+```
 
 <br />
 

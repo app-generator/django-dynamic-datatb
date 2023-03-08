@@ -1,5 +1,10 @@
 # Change Log
 
+## [1.0.23] 2023-03-08
+### Changes
+
+- - UI Fixes
+
 ## [1.0.22] 2023-03-08
 ### Changes
 

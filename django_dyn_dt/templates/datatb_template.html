@@ -1,30 +1,12 @@
 {% load static %}
 
-<!-- <div id="box" style="display: flex; border: 1px solid white; margin: 2px;"> -->
-
   <div id="div_data_table_{{model_name}}" >
     <table id="data_table_{{model_name}}" style="width: 100%;"></table>
 </div>
 
-<!-- </div> -->
-
-<!-- Notification Toast
-<div class="toast-container position-fixed bottom-0 start-0 p-3 ">
-  <div id="liveToast" class="toast text-light bg-primary" data-bs-autohide="false" role="alert" aria-live="assertive"
-    aria-atomic="true">
-    <div class="d-flex">
-      <div class="toast-body">
-        Hello! This is a sample toast.
-      </div>
-      <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-    </div>
-  </div>
-</div> -->
 <link rel="stylesheet" href="{% static 'src/style/dyn_dt.css' %}">
 
-  <!-- Context injected from Backend -->
   <script type="module">
-
     import {setData , setModelName} from '{% static 'data/index.js' %}'
 
     const headings = [
@@ -59,22 +41,6 @@
   <script type="module">
     import {DataTable} from '{% static 'data/DataTable.js' %}'
 import {modelName, myData} from '{% static 'data/index.js' %}'
-// import {events} from '{% static 'src/events/index.js' %}'
-// import {
-//   GetNewData,
-//   pageSelectController,
-//   removeRow,
-//   addRow,
-//   editRow,
-//   search,
-//   columnsManage,
-//   exportController,
-//   addController,
-//   middleContainer,
-//   getCurrentDataTable,
-// } from '{% static 'src/controller/index.js' %}'
-// import { formConstructor, formTypes } from '{% static 'src/form/index.js' %}'
-// let hasnext=
 
 let newDT=new DataTable(
                           [10,25,50], // entries Items
@@ -85,167 +51,12 @@ let newDT=new DataTable(
                         ,'{{current_page}}' // 
                         ,'{{total_pages}}'
                         ,'{{has_next}}'
-                        ,'{{has_prev}}')
-// let formType = formTypes.ADD
+                        ,'{{has_prev}}'
+                        ,myData.isDate)
+
 window.onbeforeunload=()=>{
 sessionStorage.clear()
 }
 
-
-// window.onclick = function(event) {
-//   if (!event.target.matches('.dropbtn')) {
-//     console.log(event)
-//     let dropdowns = document.getElementsByClassName("dropdown-content");
-//     let i;
-//     for (i = 0; i < dropdowns.length; i++) {
-//       let openDropdown = dropdowns[i];
-//       openDropdown.classList.toggle('show')
-//     }
-//   }
-// }
-// console.log(!'{{has_next}}', '{{has_prev}}')
-
-// let dataTable = new simpleDatatables.DataTable('#table_{{ model_name }}' , {
-//   data: myData,
-//   perPageSelect: [10,25,50],
-//   perPage: parseInt(sessionStorage.getItem('entries')) || 10,
-//   labels: {
-//       placeholder: "Search...",
-//       perPage: "{select} Items/Page",
-//       noRows: "No entries to found",
-//       info: "Showing {start} to {end} of {rows} entries",
-//   },
-//   searchable: false,
-// })
-// // console.log('{{current_page}}')
-
-// $('.dataTable-bottom').remove()
-// localStorage.setItem('entries',dataTable.options.perPage)
-// document.getElementById('pagelinker').addEventListener('click',paginator)
-
-// // edit & remove Button
-// const newColumn = []
-// myData.data.forEach((d,i) => {
-
-//   let cell = '<div style="min-width: 100px;">'
-//   const editBtn = `<i style="cursor: pointer !important;" class="btn-outline-primary edit bi bi-pencil-square" data-bs-toggle="modal" data-bs-target="#exampleModal"></i>`
-//   cell += editBtn; 
-//   cell += ' &bull; ';
-//   const removeBtn = `<i style="cursor: pointer !important;" class="btn-outline-danger remove bi bi-eraser"></i>`
-//   cell += removeBtn;
-
-//   //newColumn.push(editBtn + " &nbsp; " + removeBtn);
-//   newColumn.push(cell)
-// })
-//       // add buttons
-// dataTable.columns().add({
-//   heading: '',
-//   data: newColumn
-// })
-//       // add funcs
-
-// function dataTableEventListener(e)  {
-// e.preventDefault()
-// // console.log(e.target.nodeName)
-//   if (e.target.nodeName === 'I' ) {
-//       const row = e.target.closest('tr');
-//       const currentDatatb = e.target.closest('table')
-//       const currentModelName = currentDatatb.id.replace('table_', '')
-//       if (e.target.className.includes('remove')) {
-//           removeRow(dataTable,row.dataIndex,currentModelName)
-//           document.removeEventListener('submit',submit)
-//       }
-
-
-//       else if (e.target.className.includes('edit')) {
-//           const rowContent = [].slice.call(dataTable.data[row.dataIndex].cells).map((cell) => { return cell.textContent; });
-//           formType = formTypes.EDIT
-//           formConstructor(formTypes.EDIT,rowContent)
-
-//         }
-//   }
-// }
-
-
-// dataTable.table.addEventListener('click', dataTableEventListener)
-
-// function paginator(e) {
-//   // console.log(e)
-//   if (!e.target.innerHTML.includes('disabled')){
-//     let innerText = e.target.innerText
-//     // console.log(innerText)
-//     if (innerText==='»') {
-//     innerText= document.querySelectorAll('#pagenumber').length
-//   }
-//   if (innerText==='«') {
-//     innerText=1
-//     // console.log(innerText)
-//   } 
-//   localStorage.setItem('page',innerText)
-//   const dataTableName = e.target.className.split(' ')[1]
-//   console.log(dataTableName)
-//   // document.querySelectorAll('.pagination.justify-content-center').forEach((element)=>element.remove())
-//   GetNewData(dataTableName)
-//   // document.getElementById('pagelinker').removeEventListener('click',paginator)
-//   document.removeEventListener('submit',submit)
-// }
-// }
-
-// // events
-// events(dataTable)
-
-// // To be coded
-// //middleContainer(dataTable)
-
-// // columns manage
-// columnsManage(dataTable)
-
-// // add
-// addController(formType)
-
-// // export
-// exportController(dataTable,submit)
-
-// // Search Box
-// search(dataTable,submit)
-
-// pageSelectController(dataTable,submit)
-
-// function submit(e){
-
-// e.preventDefault()
-// // ClearModals()
-//   const currentForm = e.target.closest('form')
-//   const currentModelName = currentForm.id.replace('form_id_', '')
-
-//   if (formType === formTypes.ADD){    
-//     addRow(dataTable, getFormData(), currentModelName)
-//     document.removeEventListener('submit',submit)
-// } 
-//   else if (formType === formTypes.EDIT){
-//   const item_data=getFormData()    
-//   editRow(dataTable,item_data , currentModelName)
-//   document.removeEventListener('submit',submit)}}
-
-// document.addEventListener('submit',submit)
-
-// const getFormData = () => {
-//   const data = {}
-//   const myForm = document.querySelector('#form_id_{{ model_name }}')
-  
-//   for (let i of myForm.elements) {
-
-//     if (i.type === 'text' || i.type === 'date')
-//     data[i.placeholder] = i.value;
-//    }
-
-//   return data;
-// }
-
-// // style
-
-// let currentDataTB = getCurrentDataTable()
-// currentDataTB.querySelector('.model-name').innerHTML = modelName
-// currentDataTB.querySelector('.dataTable-top').className += ' d-flex justify-content-between bottomBorder'
-// </script>
+</script>
 

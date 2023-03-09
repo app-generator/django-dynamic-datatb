@@ -1,5 +1,4 @@
 export class DataTable {
-
     Perpage;
     Title;
     Data;
@@ -7,7 +6,6 @@ export class DataTable {
     page;
     Modal;
     headings;
-
 
     // constructor of the DataTalbe 
     // Perpage => indicate how many items which Page should contain
@@ -28,6 +26,7 @@ export class DataTable {
         , total_pages
         , has_next
         , has_prev
+        ,isDate
     ) {
         this.Perpage = Perpage
         this.Title = name
@@ -35,6 +34,9 @@ export class DataTable {
         this.element = document.getElementById(`data_table_${name}`);
         this.headings = headings
         this.ParentElement = `#div_data_table_${this.Title}`
+        this.isDate=isDate
+        console.log(isDate)
+        console.log(headings)
         localStorage.setItem(`page_${this.Title}`, current_page)
 
         // 
@@ -62,7 +64,7 @@ export class DataTable {
         const divContent = document.createElement('div')
         divContent.className = `modal-content ${this.Title}`;
 
-        this.headings.forEach((Head) => {
+        this.headings.forEach((Head,index) => {
             let Label = document.createElement('p');
             Label.id = `Modal_${this.Title}_${Head}_Label`
             Label.innerText = `${Head}`
@@ -71,6 +73,7 @@ export class DataTable {
             divContent.appendChild(Label)
             if (Head.toLowerCase() !== 'id') {
                 const NameContent = document.createElement('input');
+                if(!this.isDate[index])
                 NameContent.type = 'text';
                 NameContent.id = `Modal_${this.Title}_${Head}_Input`
                 // NameContent.onkeydown = (e) => { e.key == 'Enter' ? this.addHandler() : {} }
@@ -103,11 +106,6 @@ export class DataTable {
         this.Modal.appendChild(divContent)
         this.element.appendChild(this.Modal)
     }
-    // // to 
-    // #showToggle() {
-    //     document.getElementById('dropDownList').classList.toggle('show')
-
-    // }
 
     #setModelName(name, PerpageItems, selected, headings) {
         // Title
@@ -302,8 +300,15 @@ export class DataTable {
 
     // Creat NavBar under the footer and attach it to teh DIV container
     #setNavigation(total_pages, current_page, has_next, has_prev) {
-        let has_pr = has_prev === 'true'
-        let has_nex = has_next === 'true'
+        
+        let has_pr = has_prev.toLowerCase() === 'true'
+        let has_nex = has_next.toLowerCase() === 'true'
+
+        console.log(this.Title,
+            "\nhas_prev:",has_prev,
+            "\nhas_next:",has_next,"\n",current_page,total_pages
+        )
+
         const nav = document.createElement('nav');
         const PreviousPage = document.createElement('li');
         let button = document.createElement('button')
@@ -382,18 +387,23 @@ export class DataTable {
     }
     // Handler for Add Action 
     addHandler() {
+        console.log(this.headings)
         const Request_body = {}
         document.querySelector(`.modal-content.${this.Title}`).childNodes.forEach(element => {
-            if (element.value) {
+            console.log(element,element.value)
+            // console.log()
+            if (element.value!=undefined && element.id.toLowerCase().includes('input')) {
                 let value = element.value
                 let headname = element.id.split('_')[2]
                 Request_body[headname] = value
             }
         })
+        console.log(Request_body)
         let url = `/datatb/${this.Title}/`
+        // console.log(Request_body)
         let request = {
             method: "POST",
-            body: JSON.stringify(Request_body),
+            body: JSON.stringify(Request_body),        
         }
         this.#fetcher(url, request)
         this.Modal.style.display = 'None';
@@ -435,7 +445,6 @@ export class DataTable {
         })
     }
     SendEdit() {
-        // console.log(this.Title)
         const Request_body = {}
         let id
         document.querySelector(`.modal-content.${this.Title}`).childNodes.forEach(element => {
@@ -505,6 +514,7 @@ export class DataTable {
         this.#fetcher(url, request);
         // this.GetNewTable()
     }
+
     ClearStorage() {
         let re = new RegExp(`${this.Title}$.*`)
         let arr = []; // Array to hold the keys

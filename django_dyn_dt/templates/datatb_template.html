@@ -6,9 +6,8 @@
 
 <link rel="stylesheet" href="{% static 'src/style/dyn_dt.css' %}">
 
-  <script type="module">
+<script type="module">
     import {setData , setModelName} from '{% static 'data/index.js' %}'
-
     const headings = [
       {% for item in headings %}
         '{{ item }}',
@@ -28,19 +27,19 @@
             '{{ item }}',
         {% endfor %}
     ];
-
-
+    
+    
     setData(headings , data , isDate);
-
+    
     setModelName(
-        '{{ model_name }}'
-    );
+      '{{ model_name }}'
+      );
+      
+      </script>
 
-  </script>
-
-  <script type="module">
-    import {DataTable} from '{% static 'data/DataTable.js' %}'
-import {modelName, myData} from '{% static 'data/index.js' %}'
+<script type="module">
+  import {DataTable} from '{% static 'data/DataTable.js' %}'
+  import {modelName, myData} from '{% static 'data/index.js' %}'
 
 let newDT=new DataTable(
                           [10,25,50], // entries Items

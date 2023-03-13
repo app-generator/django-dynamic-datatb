@@ -35,8 +35,7 @@ export class DataTable {
         this.headings = headings
         this.ParentElement = `#div_data_table_${this.Title}`
         this.isDate=isDate
-        console.log(isDate)
-        console.log(headings)
+
         localStorage.setItem(`page_${this.Title}`, current_page)
 
         // 
@@ -73,7 +72,6 @@ export class DataTable {
             divContent.appendChild(Label)
             if (Head.toLowerCase() !== 'id') {
                 const NameContent = document.createElement('input');
-                if(!this.isDate[index])
                 NameContent.type = 'text';
                 NameContent.id = `Modal_${this.Title}_${Head}_Input`
                 // NameContent.onkeydown = (e) => { e.key == 'Enter' ? this.addHandler() : {} }
@@ -302,12 +300,7 @@ export class DataTable {
     #setNavigation(total_pages, current_page, has_next, has_prev) {
         
         let has_pr = has_prev.toLowerCase() === 'true'
-        let has_nex = has_next.toLowerCase() === 'true'
-
-        console.log(this.Title,
-            "\nhas_prev:",has_prev,
-            "\nhas_next:",has_next,"\n",current_page,total_pages
-        )
+        let has_nex = has_next.toLowerCase() === 'false'
 
         const nav = document.createElement('nav');
         const PreviousPage = document.createElement('li');

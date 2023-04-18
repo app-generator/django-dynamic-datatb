@@ -36,7 +36,7 @@ $ pip install git+https://github.com/app-generator/django-dynamic-datatb.git
 
 <br />
 
-> **Step #2** - Update Configuration, `add new imports`
+> **Step #2** - Update Django `settings.py`, `add new imports`
 
 ```python
 import os, inspect
@@ -45,7 +45,7 @@ import django_dyn_dt
 
 <br />
 
-> **Step #3** - Update Configuration, `include the new APPs`
+> **Step #3** - Update Django `settings.py`, `include the new APPs`
 
 ```python
 INSTALLED_APPS = [
@@ -55,7 +55,7 @@ INSTALLED_APPS = [
 
 <br />
 
-> **Step #4** - Update Configuration, include the new `TEMPLATES` DIR
+> **Step #4** - Update Django `settings.py`, include the new `TEMPLATES` DIR
 
 ```python
 
@@ -74,7 +74,7 @@ TEMPLATES = [
 
 <br />
 
-> **Step #5** - Update Configuration, update `STATICFILES_DIRS` DIR
+> **Step #5** - Update Django `settings.py`, update `STATICFILES_DIRS` DIR
 
 ```python 
 DYN_DB_PKG_ROOT = os.path.dirname( inspect.getfile( django_dyn_dt ) ) # <-- NEW App
@@ -87,7 +87,7 @@ STATICFILES_DIRS = (
 <br />
 
 
-> **Step #6** - `Update routing`, include APIs 
+> **Step #6** -  Update Django routing `urls.py`, include APIs 
 
 ```python
 from django.contrib import admin

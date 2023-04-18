@@ -45,7 +45,7 @@ import django_dyn_dt
 
 <br />
 
-> **Step #3** - Update Configuration, `include the new APPs`
+> **Step #3** - Update Configuration, `include the new APPs` - settings.py
 
 ```python
 INSTALLED_APPS = [

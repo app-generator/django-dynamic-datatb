@@ -119,7 +119,7 @@ def dyn_datatb(request):
     ddt = DataTB(model_class_path="home.models.Product")  # Link Dynamic view to a Model (full path)
     context['data_table1'] = ddt.render()                 # Render() returns the dynamic widget
 
-    return render(request, 'pages/dyn-datatb.html', context=context)
+    return HttpResponse(ddt.render())
 
 ```
 

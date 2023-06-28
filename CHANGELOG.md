@@ -1,8 +1,9 @@
 # Change Log
 
-## [1.0.11] 2023-06-28
+## [1.0.24] 2023-06-28
 ### Changes
 
+- Bump Version
 - Remove `Widget Mode` (unstable release) 
   - Fallback to single page mode
 

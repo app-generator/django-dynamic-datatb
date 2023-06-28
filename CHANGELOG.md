@@ -1,5 +1,11 @@
 # Change Log
 
+## [1.0.11] 2023-06-28
+### Changes
+
+- Remove `Widget Mode` (unstable release) 
+  - Fallback to single page mode
+
 ## [1.0.10] 2023-02-15
 ### Changes
 

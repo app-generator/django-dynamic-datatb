@@ -149,10 +149,9 @@ def export(request, **kwargs):
     export_type = request_body.get('type', 'csv')
     filter_options = Q()
 
-    headings = filter(lambda field: field.name not in hidden, _get_headings(model_class))
-    headings = list(headings)
+    headings = list(_get_headings(model_class))
     for field in headings:
-        field_name = field.name
+        field_name = field
         try:
             filter_options = filter_options | Q(**{field_name + '__icontains': search_key})
         except Exception as _:
@@ -163,12 +162,12 @@ def export(request, **kwargs):
     for data in all_data:
         this_row = []
         for heading in headings:
-            this_row.append(getattr(data, heading.name))
+            this_row.append(getattr(data, heading))
         table_data.append(this_row)
 
     df = pd.DataFrame(
         table_data,
-        columns=tuple(heading.name for heading in headings))
+        columns=tuple(heading for heading in headings))
     if export_type == 'pdf':
         base64encoded = get_pdf(df)
     elif export_type == 'xlsx':

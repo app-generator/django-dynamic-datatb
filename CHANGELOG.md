@@ -1,5 +1,11 @@
 # Change Log
 
+## [1.0.25] 2023-07-03
+### Changes
+
+- Fix the Exports 
+  - PDF & CSV
+
 ## [1.0.24] 2023-06-28
 ### Changes
 

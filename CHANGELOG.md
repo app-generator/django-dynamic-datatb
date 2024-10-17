@@ -1,5 +1,12 @@
 # Change Log
 
+## [1.0.26] 2024-10-17
+### Changes
+
+- Update RM
+  - [Django Dynamic DataTables](https://app-generator.dev/docs/developer-tools/dynamic-datatables.html)
+  - Mention [Dynamic Django](https://app-generator.dev/docs/developer-tools/dynamic-django/index.html) Starter (commercial)
+
 ## [1.0.25] 2023-07-03
 ### Changes
 
